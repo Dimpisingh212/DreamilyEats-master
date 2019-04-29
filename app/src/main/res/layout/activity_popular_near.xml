@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_width="320dp"
+        android:layout_height="280dp"
+        app:cardCornerRadius="5dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+         <ImageView
+             android:id="@+id/offer_images"
+             android:layout_width="fill_parent"
+             android:layout_height="160dp"
+             android:src="@drawable/offer_image1"/>
+         <ImageView
+             android:id="@+id/likeimage"
+             android:layout_width="50dp"
+             android:layout_height="50dp"
+             android:src="@drawable/like"
+             android:layout_marginLeft="270dp"
+             android:layout_marginTop="110dp"/>
+          <TextView
+              android:id="@+id/hotel_name"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="New Baker's Pride"
+              android:textColor="#000000"
+              android:textSize="18dp"
+              android:layout_below="@id/offer_images"
+              android:layout_marginTop="16dp"
+              android:layout_marginLeft="16dp"/>
+          <TextView
+              android:id="@+id/price_for"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:textColor="#777575"
+              android:textSize="16dp"
+              android:text="Rs. Bakery.Fast Food"
+              android:layout_below="@+id/hotel_name"
+              android:layout_marginLeft="16dp" />
+
+           <android.support.v7.widget.CardView
+               android:id="@+id/card_view1"
+               android:layout_width="100dp"
+               android:layout_height="30dp"
+               app:cardCornerRadius="5dp"
+               app:cardBackgroundColor="#F5F0F0"
+               android:layout_below="@+id/price_for"
+               android:layout_marginLeft="16dp"
+               android:layout_marginTop="10dp">
+
+               <TextView
+                   android:id="@+id/time"
+                   android:layout_width="match_parent"
+                   android:layout_height="match_parent"
+                   android:text="20-30 Min"
+                   android:textColor="#000000"
+                   android:textSize="16dp"
+                   android:gravity="center"/>
+           </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/card_view2"
+                android:layout_width="130dp"
+                android:layout_height="30dp"
+                app:cardCornerRadius="5dp"
+                app:cardBackgroundColor="#F5F0F0"
+                android:layout_below="@+id/price_for"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="10dp"
+                android:layout_toRightOf="@id/card_view1">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/grade"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="3.7"
+                    android:textColor="#000000"
+                    android:textSize="16dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="3dp"/>
+
+                <ImageView
+                    android:id="@+id/star"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/star"
+                    android:layout_marginLeft="36dp"
+                    android:layout_marginTop="5dp"/>
+
+                    <TextView
+                        android:id="@+id/grade_"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="(500+)"
+                        android:textColor="#B1ABAB"
+                        android:textSize="16dp"
+                        android:layout_marginLeft="4dp"
+                        android:layout_marginTop="3dp"
+                        android:layout_toRightOf="@id/star"/>
+
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
+
+
+
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

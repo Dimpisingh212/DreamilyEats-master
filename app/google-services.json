@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "323497170435",
+    "firebase_url": "https://dreamily-eats.firebaseio.com",
+    "project_id": "dreamily-eats",
+    "storage_bucket": "dreamily-eats.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:323497170435:android:2089fb8b429fc1df",
+        "android_client_info": {
+          "package_name": "com.example.dreamilyeats"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "323497170435-q28g252qnr8kjudflbr7rakbga8v4gu9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.dreamilyeats",
+            "certificate_hash": "b9ecff4c835ffa64a780c3d90757befa388282ef"
+          }
+        },
+        {
+          "client_id": "323497170435-79bulh6chdsk4ov5hme1r0h47gk33i4g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC8_VjDACYBxU5spLBQffJJ3jINImnJv-E"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "323497170435-79bulh6chdsk4ov5hme1r0h47gk33i4g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Dreamily Eats</string>
+    <string name="Sign_In"><u>Sign In</u></string>
+    <string name="Sign_up"><u>Sign Up</u></string>
+    <string name="facebook_app_id">1024474741077639</string>
+    <string name="fb_login_protocol_scheme">fb1024474741077639</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
