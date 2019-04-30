@@ -19,6 +19,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
@@ -88,10 +89,16 @@ public class SignUpActivity extends AppCompatActivity {
 
                                     public void onComplete(@NonNull Task<AuthResult> task) {
                                         if (!task.isSuccessful()) {
+                                            if (task.getException() instanceof FirebaseAuthUserCollisionException) {
+                                                Toast.makeText(SignUpActivity.this, "User with this email already exist.", Toast.LENGTH_SHORT).show();
+                                            }
+
                                             Toast.makeText(SignUpActivity.this, "Authentication Failed", Toast.LENGTH_LONG).show();
-                                            Log.e("error", task.getResult().toString());
+                                          //  Log.e("error", task.getResult().toString());
                                         } else {
 
+                                            if (task.getException() instanceof FirebaseAuthUserCollisionException) {
+                                                Toast.makeText(SignUpActivity.this, "User with this email already exist.", Toast.LENGTH_SHORT).show();}
                                             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                             UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                                                     .setDisplayName(username.getText().toString())

@@ -1,9 +1,11 @@
 package com.example.dreamilyeats;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -22,9 +24,6 @@ public class HomePage extends AppCompatActivity implements BottomNavigationView.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
         firebaseAuth = FirebaseAuth.getInstance();
-
-        //toolbar = findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
 
         loadFragment(new Home_Fragment());
 
@@ -66,5 +65,24 @@ public class HomePage extends AppCompatActivity implements BottomNavigationView.
         }
 
         return loadFragment(fragment);
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(this).setIcon(android.R.drawable.ic_dialog_alert).setTitle("Exit")
+                .setMessage("Are you sure you want to exit?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                       HomePage.super.onBackPressed();
+                        Intent start = new Intent(Intent.ACTION_MAIN);
+                        start.addCategory(Intent.CATEGORY_HOME);
+                        start.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        start.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(start);
+                    }
+                }).setNegativeButton("No", null).show();
+
     }
 }

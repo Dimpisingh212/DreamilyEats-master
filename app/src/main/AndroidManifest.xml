@@ -22,7 +22,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".About_profile_activity"></activity>
+        <activity android:name=".RetrofitDemo">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".About_profile_activity" />
         <activity android:name=".Cash_Payment_setting" />
         <activity android:name=".Explore_Next_Restaurants" />
         <activity android:name=".Edit_Profile_setting" />
@@ -38,9 +45,13 @@
         <activity android:name=".EditProfile" />
         <activity android:name=".Next_MoreRestaurant" />
         <activity android:name=".Settings_Activity" />
-        <activity android:name=".SignUpActivity" />
+        <activity
+            android:name=".SignUpActivity"
+            android:windowSoftInputMode="stateHidden" />
         <activity android:name=".HomePage" />
-        <activity android:name=".LoginActivity" />
+        <activity
+            android:name=".LoginActivity"
+            android:windowSoftInputMode="stateHidden" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

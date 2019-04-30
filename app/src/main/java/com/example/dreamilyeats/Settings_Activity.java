@@ -14,7 +14,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -31,7 +35,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Settings_Activity extends AppCompatActivity {
 
-    private TextView sign_out,user_name,edit_account;
+    private TextView sign_out,user_name,edit_account,home,addwork;
     private FirebaseAuth firebaseAuth;
     private ImageView back;
     private CircleImageView user_profile_pic;
@@ -48,6 +52,8 @@ public class Settings_Activity extends AppCompatActivity {
         user_name = findViewById(R.id.user_name);
         user_profile_pic=findViewById(R.id.user_profile_pic);
         edit_account=findViewById(R.id.edit_account);
+        home=findViewById(R.id.home);
+        addwork=findViewById(R.id.addwork);
 
         SharedPreferences preferences = getSharedPreferences("User", Context.MODE_PRIVATE);
         String n = preferences.getString("username", null);
@@ -63,6 +69,60 @@ public class Settings_Activity extends AppCompatActivity {
 
         Glide.with(getApplicationContext()).load(profile).into(user_profile_pic);*/
 
+        home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ViewGroup viewGroup = findViewById(android.R.id.content);
+                View view = LayoutInflater.from(Settings_Activity.this).inflate(R.layout.addhome_address_setting_design, viewGroup, false);
+                AlertDialog.Builder builder = new AlertDialog.Builder(Settings_Activity.this);
+
+                builder.setView(view);
+
+                final EditText note = view.findViewById(R.id.note);
+                final Button done = view.findViewById(R.id.done);
+
+                final AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+
+                done.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        home.setText(note.getText().toString());
+                        alertDialog.dismiss();
+                    }
+                });
+
+
+            }
+        });
+
+
+        addwork.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ViewGroup viewGroup = findViewById(android.R.id.content);
+                View view = LayoutInflater.from(Settings_Activity.this).inflate(R.layout.addhome_address_setting_design, viewGroup, false);
+                AlertDialog.Builder builder = new AlertDialog.Builder(Settings_Activity.this);
+
+                builder.setView(view);
+
+                final EditText note = view.findViewById(R.id.note);
+                final Button done = view.findViewById(R.id.done);
+
+                final AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+
+                done.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        home.setText(note.getText().toString());
+                        alertDialog.dismiss();
+                    }
+                });
+
+
+            }
+        });
 
         sign_out.setOnClickListener(new View.OnClickListener() {
             @Override

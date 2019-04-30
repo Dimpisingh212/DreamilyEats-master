@@ -45,6 +45,9 @@
                 app:layout_constraintStart_toEndOf="@+id/back"
                 app:layout_constraintTop_toTopOf="parent" />
 
+
+
+
             <ImageView
                 android:id="@+id/edit"
                 android:layout_width="40dp"

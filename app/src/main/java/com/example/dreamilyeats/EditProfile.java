@@ -79,17 +79,6 @@ public class EditProfile extends AppCompatActivity {
 
         Glide.with(getApplicationContext()).load(profile).into(profile_dp);
 
-
-
-
-
-        phone_number.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
