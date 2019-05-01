@@ -1,5 +1,6 @@
 package com.example.dreamilyeats;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,12 +12,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.dreamilyeats.InterfaceForEmailChecking.OnEmailCheckListener;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -38,6 +41,7 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.ProviderQueryResult;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -56,6 +60,7 @@ public class LoginActivity extends AppCompatActivity {
     private TextView signup,fpass;
     private ProgressDialog PD;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +91,9 @@ public class LoginActivity extends AppCompatActivity {
         }*/
 
 
+
+
+
         sign_in_button = findViewById(R.id.sign_in_button);
         login_button = findViewById(R.id.login_button);
         e_id = findViewById(R.id.e_id);
@@ -93,6 +101,29 @@ public class LoginActivity extends AppCompatActivity {
         button = findViewById(R.id.button);
         signup = findViewById(R.id.signup);
         fpass = findViewById(R.id.fpass);
+
+
+
+        e_id.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                e_id.setFocusable(true);
+                e_id.setFocusableInTouchMode(true);
+
+                return false;
+            }
+        });
+
+        pass.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                pass.setFocusable(true);
+                pass.setFocusableInTouchMode(true);
+
+                return false;
+            }
+        });
+
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken("323497170435-79bulh6chdsk4ov5hme1r0h47gk33i4g.apps.googleusercontent.com").requestEmail().build();
@@ -106,6 +137,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -116,7 +148,21 @@ public class LoginActivity extends AppCompatActivity {
 
                     if (password.length() > 0 && email.length() > 0) {
                         PD.show();
-                        createAccount(email, password);
+                        isCheckEmail(email, new OnEmailCheckListener() {
+                            @Override
+                            public void onSucess(boolean isRegistered) {
+
+                                if(isRegistered) {
+                                    Log.e(TAG , "Have an account by using this email");
+                                    createAccount(email, password);
+                                } else {
+                                    Log.e(TAG, "There haven't any account by using this email Plz register before");
+                                    PD.dismiss();
+                                }
+
+                            }
+                        });
+
                     } else {
                         Toast.makeText(LoginActivity.this, "Fill All Fields", Toast.LENGTH_LONG).show();
                     }
@@ -276,6 +322,9 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
+
+
+
     private void createAccount(String email, String password) {
 
         firebaseAuth.signInWithEmailAndPassword(email, password)
@@ -300,6 +349,22 @@ public class LoginActivity extends AppCompatActivity {
                         PD.dismiss();
                     }
                 });
+    }
+
+
+    public void isCheckEmail(final String email,final OnEmailCheckListener listener){
+        firebaseAuth.fetchProvidersForEmail(email).addOnCompleteListener(new OnCompleteListener<ProviderQueryResult>()
+        {
+            @Override
+            public void onComplete(@NonNull Task<ProviderQueryResult> task)
+            {
+                boolean check = !task.getResult().getProviders().isEmpty();
+
+                listener.onSucess(check);
+
+            }
+        });
+
     }
 
 
