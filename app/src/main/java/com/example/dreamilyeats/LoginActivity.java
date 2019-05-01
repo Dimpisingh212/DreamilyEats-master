@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dreamilyeats.InterfaceForEmailChecking.OnEmailCheckListener;
+import com.example.dreamilyeats.NetworkConnectivity.NetworkConnectionCheck;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -146,25 +147,31 @@ public class LoginActivity extends AppCompatActivity {
 
                 try {
 
-                    if (password.length() > 0 && email.length() > 0) {
-                        PD.show();
-                        isCheckEmail(email, new OnEmailCheckListener() {
-                            @Override
-                            public void onSucess(boolean isRegistered) {
+                    if((NetworkConnectionCheck.isOnline(LoginActivity.this))) {
+                        Log.e(TAG, "Network Connection on");
+                        if (password.length() > 0 && email.length() > 0) {
+                            PD.show();
+                            isCheckEmail(email, new OnEmailCheckListener() {
+                                @Override
+                                public void onSucess(boolean isRegistered) {
 
-                                if(isRegistered) {
-                                    Log.e(TAG , "Have an account by using this email");
-                                    createAccount(email, password);
-                                } else {
-                                    Log.e(TAG, "There haven't any account by using this email Plz register before");
-                                    PD.dismiss();
+                                    if (isRegistered) {
+                                        Log.e(TAG, "Successful");
+                                        createAccount(email, password);
+                                    } else {
+                                        Log.e(TAG, "There haven't any account by using this email Plz register before");
+                                        Toast.makeText(LoginActivity.this, "There haven't any account by using this email Plz register before!!!", Toast.LENGTH_LONG).show();
+                                        PD.dismiss();
+                                    }
+
                                 }
+                            });
 
-                            }
-                        });
-
+                        } else {
+                            Toast.makeText(LoginActivity.this, "Fill All Fields", Toast.LENGTH_LONG).show();
+                        }
                     } else {
-                        Toast.makeText(LoginActivity.this, "Fill All Fields", Toast.LENGTH_LONG).show();
+                        Toast.makeText(LoginActivity.this, "Plz Turn On your Data Connection.", Toast.LENGTH_LONG).show();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -195,8 +202,12 @@ public class LoginActivity extends AppCompatActivity {
         login_button.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                Log.e(TAG, "OnSuccess :" + loginResult);
-                handleFacebookACcessToken(loginResult.getAccessToken());
+                if (NetworkConnectionCheck.isOnline(LoginActivity.this)) {
+                    Log.e(TAG, "OnSuccess :" + loginResult);
+                    handleFacebookACcessToken(loginResult.getAccessToken());
+                } else {
+                    Toast.makeText(LoginActivity.this, "Plz Turn On your Data Connection.", Toast.LENGTH_LONG).show();
+                }
             }
 
             @Override
@@ -275,8 +286,12 @@ public class LoginActivity extends AppCompatActivity {
         if (requestCode == 1) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
-                GoogleSignInAccount account = task.getResult(ApiException.class);
-                firebaseAuthWithGoogle(account);
+                if(NetworkConnectionCheck.isOnline(LoginActivity.this)) {
+                    GoogleSignInAccount account = task.getResult(ApiException.class);
+                    firebaseAuthWithGoogle(account);
+                } else {
+                    Toast.makeText(LoginActivity.this, "Plz Turn On your Data Connection.", Toast.LENGTH_LONG).show();
+                }
             } catch (ApiException e) {
                 Log.e(TAG, "Google sign in failed" + e);
                 updateUI(null);

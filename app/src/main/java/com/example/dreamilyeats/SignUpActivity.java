@@ -139,18 +139,19 @@ public class SignUpActivity extends AppCompatActivity {
                             public void onSucess(boolean isRegistered) {
 
                                 if(isRegistered) {
-                                    Log.e(TAG , "THis email is already used");
+                                    Log.e(TAG , "This email is already used");
+                                    Toast.makeText(SignUpActivity.this, "User with this email already exist.", Toast.LENGTH_SHORT).show();
                                 } else {
-                                    Log.e(TAG , "THis email is not used before");
+                                    Log.e(TAG , "This email is not used before");
 
                                     auth.createUserWithEmailAndPassword(email, password1).addOnCompleteListener(SignUpActivity.this, new OnCompleteListener<AuthResult>() {
                                         @Override
 
                                         public void onComplete(@NonNull Task<AuthResult> task) {
                                             if (!task.isSuccessful()) {
-                                                if (task.getException() instanceof FirebaseAuthUserCollisionException) {
+                                                /*if (task.getException() instanceof FirebaseAuthUserCollisionException) {
                                                     Toast.makeText(SignUpActivity.this, "User with this email already exist.", Toast.LENGTH_SHORT).show();
-                                                }
+                                                }*/
 
                                                 Toast.makeText(SignUpActivity.this, "Authentication Failed", Toast.LENGTH_LONG).show();
                                                   Log.e("error", task.getResult().toString());
