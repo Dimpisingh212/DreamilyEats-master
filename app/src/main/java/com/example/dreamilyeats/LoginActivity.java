@@ -57,7 +57,7 @@ public class LoginActivity extends AppCompatActivity {
     private static int RC_SIGN_IN = 1;
     private CallbackManager callbackManager;
     private EditText e_id, pass;
-    private Button button;
+    private Button button,fb;
     private TextView signup,fpass;
     private ProgressDialog PD;
 
@@ -102,6 +102,7 @@ public class LoginActivity extends AppCompatActivity {
         button = findViewById(R.id.button);
         signup = findViewById(R.id.signup);
         fpass = findViewById(R.id.fpass);
+        fb = findViewById(R.id.fb);
 
 
 
@@ -198,28 +199,43 @@ public class LoginActivity extends AppCompatActivity {
         });
 
 
-        login_button.setReadPermissions("email", "public_profile");
-        login_button.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+        fb.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onSuccess(LoginResult loginResult) {
-                if (NetworkConnectionCheck.isOnline(LoginActivity.this)) {
-                    Log.e(TAG, "OnSuccess :" + loginResult);
-                    handleFacebookACcessToken(loginResult.getAccessToken());
-                } else {
-                    Toast.makeText(LoginActivity.this, "Plz Turn On your Data Connection.", Toast.LENGTH_LONG).show();
+            public void onClick(View v) {
+                if (v == fb) {
+                    if(NetworkConnectionCheck.isOnline(LoginActivity.this)) {
+                        login_button.performClick();
+                    } else {
+                        Toast.makeText(LoginActivity.this, "Plz Turn On your Data Connection.", Toast.LENGTH_LONG).show();
+                    }
                 }
             }
-
-            @Override
-            public void onCancel() {
-                Log.e(TAG, "OnCancel");
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-                Log.e(TAG, "OnError");
-            }
         });
+
+
+            login_button.setReadPermissions("email", "public_profile");
+            login_button.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+                @Override
+                public void onSuccess(LoginResult loginResult) {
+                    Log.e(TAG, "OnSuccess :" + loginResult);
+                    handleFacebookACcessToken(loginResult.getAccessToken());
+
+
+                }
+
+
+                @Override
+                public void onCancel() {
+                    Log.e(TAG, "OnCancel");
+                }
+
+                @Override
+                public void onError(FacebookException error) {
+                    Log.e(TAG, "OnError");
+                }
+            });
+
+
 
     }
 

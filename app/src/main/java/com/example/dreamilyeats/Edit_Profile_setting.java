@@ -2,6 +2,7 @@ package com.example.dreamilyeats;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -30,8 +31,18 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -40,6 +51,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.security.Principal;
 import java.util.Date;
+import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -52,6 +64,12 @@ public class Edit_Profile_setting extends AppCompatActivity {
     SharedPreferences.Editor editor1;
     SharedPreferences.Editor editor;
     private FirebaseAuth firebaseAuth;
+    DatabaseReference reference;
+    FirebaseUser firebaseUser;
+    StorageReference storageReference;
+    private static final int IMAGE_REQUEST=66;
+    private Uri imageUri;
+    private StorageTask uploadTask;
 
 
 
@@ -69,6 +87,11 @@ public class Edit_Profile_setting extends AppCompatActivity {
         profile_dp = findViewById(R.id.profile_dp);
         done = findViewById(R.id.done);
         user_name.setText(firebaseUser.getDisplayName());
+
+        storageReference = FirebaseStorage.getInstance().getReference("uploads");
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        reference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
+
 
 
 
@@ -259,6 +282,72 @@ public class Edit_Profile_setting extends AppCompatActivity {
         byte[] decodeByte = Base64.decode(input, 0);
         return  BitmapFactory.decodeByteArray(decodeByte, 0, decodeByte.length);
     }
+
+
+
+    /*private void uploadImage(){
+
+
+        final ProgressDialog progressDialog=new ProgressDialog(Edit_Profile_setting.this);
+        progressDialog.setMessage("uploading");
+        progressDialog.show();
+
+        if(imageUri!=null){
+
+            final StorageReference fileReference= storageReference.child(System.currentTimeMillis()+
+                    "."+getFileExtension(imageUri));
+
+            uploadTask=fileReference.putFile(imageUri);
+            uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>()
+                                        {
+                                            @Override
+
+                                            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+
+                                                if(!task.isSuccessful()){
+
+                                                    throw task.getException();
+                                                }
+
+
+                                                return fileReference.getDownloadUrl();
+                                            }
+
+                                        }
+            ).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if(task.isSuccessful()){
+
+                        Uri downloadUri=task.getResult();
+                        String mUri=downloadUri.toString();
+
+
+                        reference=FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
+                        HashMap<String, Object> map=new HashMap<>();
+                        map.put("imageURl",mUri);
+                        reference.updateChildren(map);
+                        progressDialog.dismiss();
+                    }
+                    else {
+                        Toast.makeText(Edit_Profile_setting.this,"faild",Toast.LENGTH_SHORT).show();
+                        progressDialog.dismiss();
+                    }
+
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(Edit_Profile_setting.this,e.getMessage(),Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
+                }
+            });
+
+        }else {
+            Toast.makeText(Edit_Profile_setting.this, "no Image Selected", Toast.LENGTH_SHORT).show();
+        }
+    }*/
+
 
 
 }

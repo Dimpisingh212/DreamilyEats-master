@@ -41,10 +41,11 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:15.0.1'
     // Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.1.0'
-
-// JSON Parsing
+    // JSON Parsing
     implementation 'com.google.code.gson:gson:2.6.1'
     implementation 'com.squareup.retrofit2:converter-gson:2.1.0'
+    //for StorageReferance class
+    implementation 'com.google.firebase:firebase-storage:16.1.0'
 }
 
 apply plugin: 'com.google.gms.google-services'
