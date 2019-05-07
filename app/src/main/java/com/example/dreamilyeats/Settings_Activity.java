@@ -44,7 +44,7 @@ public class Settings_Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         firebaseAuth = FirebaseAuth.getInstance();
-        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+        final FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         setContentView(R.layout.activity_settings_);
 
         sign_out = findViewById(R.id.sign_out);
@@ -62,6 +62,10 @@ public class Settings_Activity extends AppCompatActivity {
 
         user_name.setText(firebaseUser.getDisplayName());
         Glide.with(getApplicationContext()).load(firebaseUser.getPhotoUrl()).into(user_profile_pic);
+
+        SharedPreferences.Editor editor = getSharedPreferences("MyPic" , MODE_PRIVATE).edit();
+        editor.putString("firebase_pic", String.valueOf(firebaseUser.getPhotoUrl()));
+        editor.commit();
 
         /*SharedPreferences sharedPreferences = getSharedPreferences("USER_PROFILE", MODE_PRIVATE);
         String image = sharedPreferences.getString("myprofile" , null);
@@ -163,6 +167,7 @@ public class Settings_Activity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Settings_Activity.this, EditProfile.class);
+               // intent.putExtra("Picture" , String.valueOf(firebaseUser.getPhotoUrl()));
                 startActivity(intent);
             }
         });

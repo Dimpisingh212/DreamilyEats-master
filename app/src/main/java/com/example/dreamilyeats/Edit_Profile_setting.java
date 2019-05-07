@@ -34,11 +34,13 @@ import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
@@ -52,6 +54,7 @@ import java.io.OutputStream;
 import java.security.Principal;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicMarkableReference;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -64,12 +67,8 @@ public class Edit_Profile_setting extends AppCompatActivity {
     SharedPreferences.Editor editor1;
     SharedPreferences.Editor editor;
     private FirebaseAuth firebaseAuth;
-    DatabaseReference reference;
-    FirebaseUser firebaseUser;
-    StorageReference storageReference;
-    private static final int IMAGE_REQUEST=66;
-    private Uri imageUri;
-    private StorageTask uploadTask;
+    private FirebaseStorage storage;
+    private Bitmap my_image;
 
 
 
@@ -80,6 +79,8 @@ public class Edit_Profile_setting extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
+        storage = FirebaseStorage.getInstance();
+
 
         user_name = findViewById(R.id.user_name);
         back = findViewById(R.id.back);
@@ -88,9 +89,8 @@ public class Edit_Profile_setting extends AppCompatActivity {
         done = findViewById(R.id.done);
         user_name.setText(firebaseUser.getDisplayName());
 
-        storageReference = FirebaseStorage.getInstance().getReference("uploads");
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        reference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
+
+
 
 
 
@@ -104,6 +104,8 @@ public class Edit_Profile_setting extends AppCompatActivity {
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                upload();
 
                 SharedPreferences.Editor editor = getSharedPreferences("USER_DATA", MODE_PRIVATE).edit();
                 editor.putString("Editusername", user_name.getText().toString());
@@ -121,23 +123,8 @@ public class Edit_Profile_setting extends AppCompatActivity {
             Bitmap image = decodeBase64(mygallaryimage);
             Glide.with(getApplicationContext()).load(image).into(profile_dp);
 
-           /* editor = getSharedPreferences("USER_PROFILE", MODE_PRIVATE).edit();
-            editor.putString("myprofile", encodeToBase64(image));
-            editor.commit();
-*/
-
         }else {
             Glide.with(getApplicationContext()).load(firebaseUser.getPhotoUrl()).into(profile_dp);
-
-            /*Bitmap bitmap = null;
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), firebaseUser.getPhotoUrl());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            editor = getSharedPreferences("USER_PROFILE", MODE_PRIVATE).edit();
-            editor.putString("myprofile", encodeToBase64(bitmap));
-            editor.commit();*/
 
         }
 
@@ -284,69 +271,68 @@ public class Edit_Profile_setting extends AppCompatActivity {
     }
 
 
+    public void upload() {
 
-    /*private void uploadImage(){
-
-
-        final ProgressDialog progressDialog=new ProgressDialog(Edit_Profile_setting.this);
-        progressDialog.setMessage("uploading");
-        progressDialog.show();
-
-        if(imageUri!=null){
-
-            final StorageReference fileReference= storageReference.child(System.currentTimeMillis()+
-                    "."+getFileExtension(imageUri));
-
-            uploadTask=fileReference.putFile(imageUri);
-            uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>()
-                                        {
-                                            @Override
-
-                                            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-
-                                                if(!task.isSuccessful()){
-
-                                                    throw task.getException();
-                                                }
+        // Create a storage reference from our app
+        StorageReference storageRef = storage.getReference();
+        // Create a reference to "mountains.jpg"
+        StorageReference mountainsRef = storageRef.child("mountains.jpg");
+        // Create a reference to 'images/mountains.jpg'
+        StorageReference mountainImagesRef = storageRef.child("images/mountains.jpg");
+        // While the file names are the same, the references point to different files
+        mountainsRef.getName().equals(mountainImagesRef.getName());    // true
+        mountainsRef.getPath().equals(mountainImagesRef.getPath());    // false
 
 
-                                                return fileReference.getDownloadUrl();
-                                            }
+        // Get the data from an ImageView as bytes
+        profile_dp.setDrawingCacheEnabled(true);
+        profile_dp.buildDrawingCache();
+        Bitmap bitmap = profile_dp.getDrawingCache();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
 
-                                        }
-            ).addOnCompleteListener(new OnCompleteListener<Uri>() {
+        UploadTask uploadTask = mountainsRef.putBytes(data);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+                Log.e("Profile upload exception", " " +exception);
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Log.e("Profile upload ", " ");
+            }
+        });
+    }
+
+
+
+    public void getImage() {
+        StorageReference ref = storage.getReference().child("mountains.jpg");
+        try {
+            final File localFile = File.createTempFile("Images", "bmp");
+            ref.getFile(localFile).addOnSuccessListener(new OnSuccessListener< FileDownloadTask.TaskSnapshot >() {
                 @Override
-                public void onComplete(@NonNull Task<Uri> task) {
-                    if(task.isSuccessful()){
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    my_image = BitmapFactory.decodeFile(localFile.getAbsolutePath());
 
-                        Uri downloadUri=task.getResult();
-                        String mUri=downloadUri.toString();
-
-
-                        reference=FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
-                        HashMap<String, Object> map=new HashMap<>();
-                        map.put("imageURl",mUri);
-                        reference.updateChildren(map);
-                        progressDialog.dismiss();
-                    }
-                    else {
-                        Toast.makeText(Edit_Profile_setting.this,"faild",Toast.LENGTH_SHORT).show();
-                        progressDialog.dismiss();
-                    }
+                    SharedPreferences.Editor editor = getSharedPreferences("MyPic" , MODE_PRIVATE).edit();
+                    editor.putString("firebase_pic", String.valueOf(my_image));
+                    editor.commit();
 
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(Edit_Profile_setting.this,e.getMessage(),Toast.LENGTH_SHORT).show();
-                    progressDialog.dismiss();
+                    Toast.makeText(Edit_Profile_setting.this, e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             });
-
-        }else {
-            Toast.makeText(Edit_Profile_setting.this, "no Image Selected", Toast.LENGTH_SHORT).show();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-    }*/
+    }
 
 
 

@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -25,22 +26,37 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.facebook.Profile;
 import com.facebook.internal.ImageRequest;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import java.io.File;
+import java.io.IOException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import retrofit2.http.Url;
 
 public class EditProfile extends AppCompatActivity {
 
+    private static final String TAG = "EditProfile=> ";
     private TextView user_name, email_id,phone_number;
     private FirebaseAuth firebaseAuth;
     private CircleImageView profile_dp;
     private ImageView back,edit;
+    private FirebaseStorage storage;
+    private Bitmap my_image;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +65,12 @@ public class EditProfile extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+        storage = FirebaseStorage.getInstance();
+
+
+
+
+
 
         user_name = findViewById(R.id.user_name);
         email_id = findViewById(R.id.email_id);
@@ -67,17 +89,55 @@ public class EditProfile extends AppCompatActivity {
 
         user_name.setText(firebaseUser.getDisplayName());
         email_id.setText(firebaseUser.getEmail());
-        //Glide.with(getApplicationContext()).load(firebaseUser.getPhotoUrl()).into(profile_dp);
 
-       /* SharedPreferences sharedPreferences = getSharedPreferences("USER_PROFILE", MODE_PRIVATE);
-        String image = sharedPreferences.getString("myprofile" , null);
-        Bitmap profile = decodeBase64(image);*/
 
+      /*  //getting profile Pic from records that are stored in login activity :
+        SharedPreferences editor_record = getSharedPreferences("User_record" , MODE_PRIVATE);
+        String record_data = editor_record.getString("my_record" , null);
+        JsonObject jsonObject = (JsonObject) new JsonParser().parse(record_data);
+        Log.e(TAG, "UserRecorded_data : " +jsonObject.toString());*/
+
+
+        // getting profile by intent :
+       /* Intent intent = getIntent();
+        String photo = intent.getStringExtra("Picture");
+        Bitmap profile = decodeBase64(photo);
+        Glide.with(getApplicationContext()).load(profile).into(profile_dp);*/
+
+        SharedPreferences final_pic = getSharedPreferences("MyPic" , MODE_PRIVATE);
+        String pic = final_pic.getString("firebase_pic", null);
+        Bitmap myPic = decodeBase64(pic);
+        Glide.with(getApplicationContext()).load(myPic).into(profile_dp);
+
+        /*StorageReference ref = storage.getReference().child("mountains.jpg");
+        try {
+            final File localFile = File.createTempFile("Images", "bmp");
+            ref.getFile(localFile).addOnSuccessListener(new OnSuccessListener< FileDownloadTask.TaskSnapshot >() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    my_image = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                    Glide.with(getApplicationContext()).load(my_image).into(profile_dp);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(EditProfile.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+*/
+
+
+/*
         SharedPreferences sharedPreferences1 = getSharedPreferences("USER_INFO", MODE_PRIVATE);
         String mygallaryimage = sharedPreferences1.getString("MYPIC", null);
-        Bitmap profile = decodeBase64(mygallaryimage);
 
-        Glide.with(getApplicationContext()).load(profile).into(profile_dp);
+        Log.e(TAG, "mygallaryimage: "+mygallaryimage );
+        Bitmap profile = decodeBase64(mygallaryimage);*/
+
+
 
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,6 +153,7 @@ public class EditProfile extends AppCompatActivity {
                 onBackPressed();
             }
         });
+
 
 
         phone_number.setOnClickListener(new View.OnClickListener() {
@@ -138,7 +199,6 @@ public class EditProfile extends AppCompatActivity {
         byte[] decodeByte = Base64.decode(input, 0);
         return  BitmapFactory.decodeByteArray(decodeByte, 0, decodeByte.length);
     }
-
 
 
 

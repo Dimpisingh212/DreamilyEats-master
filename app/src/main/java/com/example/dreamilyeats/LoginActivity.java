@@ -43,6 +43,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.ProviderQueryResult;
+import com.google.gson.JsonObject;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -252,6 +253,18 @@ public class LoginActivity extends AppCompatActivity {
                     Log.e(TAG, "User Id :" + firebaseUser.getEmail());
                     Log.e(TAG, "User name :" + firebaseUser.getDisplayName());
                     Log.e(TAG, "User phone number :" + firebaseUser.getPhoneNumber());
+                    Log.e(TAG, "User Pic :" + firebaseUser.getPhotoUrl());
+
+
+                    JsonObject jsonObject = new JsonObject();
+                    jsonObject.addProperty("name",firebaseUser.getDisplayName());
+                    jsonObject.addProperty("email_id",firebaseUser.getEmail());
+                    jsonObject.addProperty("phone_number",firebaseUser.getPhoneNumber());
+                    jsonObject.addProperty("profile_pic", String.valueOf(firebaseUser.getPhotoUrl()));
+
+                    SharedPreferences.Editor editor_record = getSharedPreferences("User_record" , MODE_PRIVATE).edit();
+                    editor_record.putString("my_record" , String.valueOf(jsonObject));
+                    editor_record.commit();
 
 
                     Toast.makeText(LoginActivity.this, "Successful", Toast.LENGTH_LONG).show();
