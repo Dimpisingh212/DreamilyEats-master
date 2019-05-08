@@ -39,7 +39,6 @@
         <activity android:name=".Payments_Setting" />
         <activity android:name=".Your_Favourites" />
         <activity android:name=".ForgetAndChangePasswordActivity" /> <!-- <activity android:name=".Register_first" /> -->
-        <activity android:name=".ViewAddress" />
         <activity android:name=".Your_Cart" />
         <activity android:name=".Home_Filter_Custom_Window" />
         <activity android:name=".After_select_menu" />

@@ -82,12 +82,12 @@ public class Edit_Profile_setting extends AppCompatActivity {
         storage = FirebaseStorage.getInstance();
 
 
-        user_name = findViewById(R.id.user_name);
+       // user_name = findViewById(R.id.user_name);
         back = findViewById(R.id.back);
         add = findViewById(R.id.add);
         profile_dp = findViewById(R.id.profile_dp);
         done = findViewById(R.id.done);
-        user_name.setText(firebaseUser.getDisplayName());
+      //  user_name.setText(firebaseUser.getDisplayName());
 
 
 
@@ -106,10 +106,6 @@ public class Edit_Profile_setting extends AppCompatActivity {
             public void onClick(View v) {
 
                 upload();
-
-                SharedPreferences.Editor editor = getSharedPreferences("USER_DATA", MODE_PRIVATE).edit();
-                editor.putString("Editusername", user_name.getText().toString());
-                editor.commit();
                 onBackPressed();
             }
         });
@@ -122,6 +118,7 @@ public class Edit_Profile_setting extends AppCompatActivity {
         {
             Bitmap image = decodeBase64(mygallaryimage);
             Glide.with(getApplicationContext()).load(image).into(profile_dp);
+            getImage();
 
         }else {
             Glide.with(getApplicationContext()).load(firebaseUser.getPhotoUrl()).into(profile_dp);
@@ -276,12 +273,12 @@ public class Edit_Profile_setting extends AppCompatActivity {
         // Create a storage reference from our app
         StorageReference storageRef = storage.getReference();
         // Create a reference to "mountains.jpg"
-        StorageReference mountainsRef = storageRef.child("mountains.jpg");
+        StorageReference childRef = storageRef.child("mountains.jpg");
         // Create a reference to 'images/mountains.jpg'
         StorageReference mountainImagesRef = storageRef.child("images/mountains.jpg");
         // While the file names are the same, the references point to different files
-        mountainsRef.getName().equals(mountainImagesRef.getName());    // true
-        mountainsRef.getPath().equals(mountainImagesRef.getPath());    // false
+        childRef.getName().equals(mountainImagesRef.getName());    // true
+        childRef.getPath().equals(mountainImagesRef.getPath());    // false
 
 
         // Get the data from an ImageView as bytes
@@ -289,10 +286,10 @@ public class Edit_Profile_setting extends AppCompatActivity {
         profile_dp.buildDrawingCache();
         Bitmap bitmap = profile_dp.getDrawingCache();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
         byte[] data = baos.toByteArray();
 
-        UploadTask uploadTask = mountainsRef.putBytes(data);
+        UploadTask uploadTask = childRef.putBytes(data);
         uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
@@ -303,6 +300,7 @@ public class Edit_Profile_setting extends AppCompatActivity {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 Log.e("Profile upload ", " ");
+
             }
         });
     }
@@ -317,11 +315,7 @@ public class Edit_Profile_setting extends AppCompatActivity {
                 @Override
                 public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                     my_image = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-
-                    SharedPreferences.Editor editor = getSharedPreferences("MyPic" , MODE_PRIVATE).edit();
-                    editor.putString("firebase_pic", String.valueOf(my_image));
-                    editor.commit();
-
+                    Glide.with(getApplicationContext()).load(my_image).into(profile_dp);
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -330,6 +324,9 @@ public class Edit_Profile_setting extends AppCompatActivity {
                 }
             });
         } catch (IOException e) {
+
+
+            Log.e("Edit Profile Setting :" , "exception :" +e);
             e.printStackTrace();
         }
     }

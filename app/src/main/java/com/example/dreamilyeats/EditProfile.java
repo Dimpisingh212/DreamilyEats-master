@@ -83,9 +83,9 @@ public class EditProfile extends AppCompatActivity {
         String n = preferences.getString("username", null);
         user_name.setText(n);
 
-        SharedPreferences preferences1 = getSharedPreferences("USER_DATA", MODE_PRIVATE);
+      /*  SharedPreferences preferences1 = getSharedPreferences("USER_DATA", MODE_PRIVATE);
         String uname = preferences1.getString("Editusername", null);
-        user_name.setText(uname);
+        user_name.setText(uname);*/
 
         user_name.setText(firebaseUser.getDisplayName());
         email_id.setText(firebaseUser.getEmail());
@@ -99,17 +99,13 @@ public class EditProfile extends AppCompatActivity {
 
 
         // getting profile by intent :
-       /* Intent intent = getIntent();
+        Intent intent = getIntent();
         String photo = intent.getStringExtra("Picture");
-        Bitmap profile = decodeBase64(photo);
-        Glide.with(getApplicationContext()).load(profile).into(profile_dp);*/
+        final Bitmap profile = decodeBase64(photo);
+        Glide.with(getApplicationContext()).load(profile).into(profile_dp);
 
-        SharedPreferences final_pic = getSharedPreferences("MyPic" , MODE_PRIVATE);
-        String pic = final_pic.getString("firebase_pic", null);
-        Bitmap myPic = decodeBase64(pic);
-        Glide.with(getApplicationContext()).load(myPic).into(profile_dp);
-
-        /*StorageReference ref = storage.getReference().child("mountains.jpg");
+        //get image from firebase storage :
+        StorageReference ref = storage.getReference().child("mountains.jpg");
         try {
             final File localFile = File.createTempFile("Images", "bmp");
             ref.getFile(localFile).addOnSuccessListener(new OnSuccessListener< FileDownloadTask.TaskSnapshot >() {
@@ -122,20 +118,17 @@ public class EditProfile extends AppCompatActivity {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     Toast.makeText(EditProfile.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                    Glide.with(getApplicationContext()).load(profile).into(profile_dp);
                 }
             });
         } catch (IOException e) {
             e.printStackTrace();
+            Glide.with(getApplicationContext()).load(profile).into(profile_dp);
+            Toast.makeText(EditProfile.this, "Profile not uploaded.", Toast.LENGTH_LONG).show();
         }
-*/
 
 
-/*
-        SharedPreferences sharedPreferences1 = getSharedPreferences("USER_INFO", MODE_PRIVATE);
-        String mygallaryimage = sharedPreferences1.getString("MYPIC", null);
 
-        Log.e(TAG, "mygallaryimage: "+mygallaryimage );
-        Bitmap profile = decodeBase64(mygallaryimage);*/
 
 
 

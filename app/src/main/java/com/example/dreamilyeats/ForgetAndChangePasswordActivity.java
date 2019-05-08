@@ -1,6 +1,7 @@
 package com.example.dreamilyeats;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -25,6 +26,7 @@ public class ForgetAndChangePasswordActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     TextInputLayout label;
     TextView change_pass;
+    private String emailId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,13 +39,15 @@ public class ForgetAndChangePasswordActivity extends AppCompatActivity {
         label = findViewById(R.id.label);
         change_pass = findViewById(R.id.change_pass);
 
+
+
             PD = new ProgressDialog(this);
             PD.setMessage("Loading...");
             PD.setCancelable(true);
             PD.setCanceledOnTouchOutside(false);
 
 
-
+/*
             final int mode = getIntent().getIntExtra("Mode", 0);
             if (mode == 0) {
                 change_pass.setText("Forget Password");
@@ -60,12 +64,23 @@ public class ForgetAndChangePasswordActivity extends AppCompatActivity {
             } else {
                 change_pass.setText("Delete User");
                 email_id.setVisibility(View.GONE);
-            }
+            }*/
 
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    callFunction(mode);
+                  //  callFunction(mode);
+                    emailId = email_id.getText().toString();
+                    auth.sendPasswordResetEmail(emailId).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if(task.isSuccessful()) {
+                                Intent intent = new Intent(ForgetAndChangePasswordActivity.this, LoginActivity.class);
+                                Toast.makeText(ForgetAndChangePasswordActivity.this, "check your email id." , Toast.LENGTH_LONG).show();
+                                startActivity(intent);
+                            }
+                        }
+                    });
                 }
             });
 

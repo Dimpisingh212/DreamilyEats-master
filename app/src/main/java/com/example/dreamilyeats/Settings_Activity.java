@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
@@ -21,11 +22,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -39,6 +47,9 @@ public class Settings_Activity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private ImageView back;
     private CircleImageView user_profile_pic;
+    private Bitmap my_image;
+    private FirebaseStorage storage;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +57,7 @@ public class Settings_Activity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         final FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         setContentView(R.layout.activity_settings_);
+        storage = FirebaseStorage.getInstance();
 
         sign_out = findViewById(R.id.sign_out);
         back = findViewById(R.id.back);
@@ -66,6 +78,30 @@ public class Settings_Activity extends AppCompatActivity {
         SharedPreferences.Editor editor = getSharedPreferences("MyPic" , MODE_PRIVATE).edit();
         editor.putString("firebase_pic", String.valueOf(firebaseUser.getPhotoUrl()));
         editor.commit();
+
+        // get image from firebase storage :
+        StorageReference ref = storage.getReference().child("mountains.jpg");
+        try {
+            final File localFile = File.createTempFile("Images", "bmp");
+            ref.getFile(localFile).addOnSuccessListener(new OnSuccessListener< FileDownloadTask.TaskSnapshot >() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    my_image = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                    Glide.with(getApplicationContext()).load(my_image).into(user_profile_pic);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(Settings_Activity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                    Glide.with(getApplicationContext()).load(firebaseUser.getPhotoUrl()).into(user_profile_pic);
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+            Glide.with(getApplicationContext()).load(firebaseUser.getPhotoUrl()).into(user_profile_pic);
+            Toast.makeText(Settings_Activity.this, "Profile not uploaded.", Toast.LENGTH_LONG).show();
+        }
+
 
         /*SharedPreferences sharedPreferences = getSharedPreferences("USER_PROFILE", MODE_PRIVATE);
         String image = sharedPreferences.getString("myprofile" , null);
@@ -167,7 +203,7 @@ public class Settings_Activity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Settings_Activity.this, EditProfile.class);
-               // intent.putExtra("Picture" , String.valueOf(firebaseUser.getPhotoUrl()));
+                intent.putExtra("Picture" , String.valueOf(firebaseUser.getPhotoUrl()));
                 startActivity(intent);
             }
         });

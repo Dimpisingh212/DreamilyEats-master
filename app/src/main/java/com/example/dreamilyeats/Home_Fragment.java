@@ -44,7 +44,7 @@ public class Home_Fragment extends Fragment {
     private ViewPager pager;
     private ImageView filter;
     private ArrayList<String> photosUrl = new ArrayList<>();
-    private TextView address;
+    private TextView welcome;
     private RecyclerView recycler_view,recycler_view1,recycler_view2;
     private View view;
     private ConstraintLayout linearLayout;
@@ -68,7 +68,7 @@ public class Home_Fragment extends Fragment {
 
 
         filter = view.findViewById(R.id.filter);
-        address = view.findViewById(R.id.address);
+        welcome = view.findViewById(R.id.welcome);
         linearLayout = view.findViewById(R.id.linearLayout);
         /*filter.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,7 +127,7 @@ public class Home_Fragment extends Fragment {
         MoreRestaurantsAdapter moreRestaurantsAdapter = new MoreRestaurantsAdapter(getContext(), arrayList2);
         recycler_view2.setAdapter(moreRestaurantsAdapter);
 
-
+/*
         SharedPreferences sharedPreferences1 = getActivity().getSharedPreferences("ADDRESS", MODE_PRIVATE);
         String current_address = sharedPreferences1.getString("address", null);
 
@@ -139,7 +139,7 @@ public class Home_Fragment extends Fragment {
                 getActivity().startActivity(intent);
 
             }
-        });
+        });*/
 
         return view;
 
