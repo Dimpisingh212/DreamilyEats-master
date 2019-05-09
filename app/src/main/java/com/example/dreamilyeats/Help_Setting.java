@@ -41,6 +41,12 @@ public class Help_Setting extends AppCompatActivity {
         past_order_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                Intent intent = new Intent(Help_Setting.this, HomePage.class);
+
+                GlobalArray.flag = true ;
+                startActivity(intent);
+
                 
             }
         });

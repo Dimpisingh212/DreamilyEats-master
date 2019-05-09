@@ -42,7 +42,12 @@ public class GlobalArray extends Application {
 
     public ArrayList<PlaceOrderListModel> getNewplaceOrderListModels() {
         return newplaceOrderListModels;
+
+
     }
+
+
+    public static boolean flag = false;
 }
 
 

@@ -19,16 +19,39 @@ public class HomePage extends AppCompatActivity implements BottomNavigationView.
     private Toolbar toolbar;
     private FirebaseAuth firebaseAuth;
     private BottomNavigationView bottom_navigation;
+
+
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
+
         firebaseAuth = FirebaseAuth.getInstance();
-
-        loadFragment(new Home_Fragment());
-
         bottom_navigation = findViewById(R.id.bottom_navigation);
         bottom_navigation.setOnNavigationItemSelectedListener(this);
+
+        if (GlobalArray.flag){
+            GlobalArray.flag = false;
+
+
+
+            bottom_navigation.getMenu().getItem(2).setChecked(true);
+            loadFragment(new Notification_Fragment());
+        }
+
+        else {
+
+            loadFragment(new Home_Fragment());
+        }
+
+
+
+
+
 
 
     }

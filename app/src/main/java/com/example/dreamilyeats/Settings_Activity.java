@@ -41,7 +41,7 @@ import java.net.URL;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class Settings_Activity extends AppCompatActivity {
+public class Settings_Activity extends AppCompatActivity implements View.OnClickListener {
 
     private TextView sign_out,user_name,edit_account,home,addwork;
     private FirebaseAuth firebaseAuth;
@@ -103,7 +103,10 @@ public class Settings_Activity extends AppCompatActivity {
         }
 
 
-        /*SharedPreferences sharedPreferences = getSharedPreferences("USER_PROFILE", MODE_PRIVATE);
+
+
+/*
+        SharedPreferences sharedPreferences = getSharedPreferences("USER_PROFILE", MODE_PRIVATE);
         String image = sharedPreferences.getString("myprofile" , null);
         Bitmap profile = decodeBase64(image);
 
@@ -217,5 +220,23 @@ public class Settings_Activity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onClick(View v) {
 
+
+        /*switch (v.getId()){
+
+            case R.id.home:
+                break;
+
+
+
+            case R.id.addwork:
+                break;
+
+
+            case R.id.sign_out:
+                break;
+        }*/
+    }
 }

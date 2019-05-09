@@ -46,6 +46,10 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.1.0'
     //for StorageReferance class
     implementation 'com.google.firebase:firebase-storage:16.1.0'
+    //For ButterKnife :
+    implementation "com.jakewharton:butterknife:8.8.1"
+    annotationProcessor "com.jakewharton:butterknife-compiler:8.8.1"
+
 }
 
 apply plugin: 'com.google.gms.google-services'
