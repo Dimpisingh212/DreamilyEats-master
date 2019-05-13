@@ -64,7 +64,7 @@ public class EditProfile extends AppCompatActivity {
         setContentView(R.layout.activity_edit_profile);
 
         firebaseAuth = FirebaseAuth.getInstance();
-        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+        final FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         storage = FirebaseStorage.getInstance();
 
 
@@ -99,33 +99,68 @@ public class EditProfile extends AppCompatActivity {
 
 
         // getting profile by intent :
-        Intent intent = getIntent();
+       /* Intent intent = getIntent();
         String photo = intent.getStringExtra("Picture");
         final Bitmap profile = decodeBase64(photo);
-        Glide.with(getApplicationContext()).load(profile).into(profile_dp);
+        Glide.with(getApplicationContext()).load(profile).into(profile_dp);*/
 
-        //get image from firebase storage :
-        StorageReference ref = storage.getReference().child("mountains.jpg");
-        try {
-            final File localFile = File.createTempFile("Images", "bmp");
-            ref.getFile(localFile).addOnSuccessListener(new OnSuccessListener< FileDownloadTask.TaskSnapshot >() {
-                @Override
-                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                    my_image = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                    Glide.with(getApplicationContext()).load(my_image).into(profile_dp);
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(EditProfile.this, e.getMessage(), Toast.LENGTH_LONG).show();
-                    Glide.with(getApplicationContext()).load(profile).into(profile_dp);
-                }
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
-            Glide.with(getApplicationContext()).load(profile).into(profile_dp);
-            Toast.makeText(EditProfile.this, "Profile not uploaded.", Toast.LENGTH_LONG).show();
+
+        if (firebaseUser.getPhotoUrl()!=null && !firebaseUser.getPhotoUrl().toString().equalsIgnoreCase("")){
+            // get image from firebase storage :
+            StorageReference ref = storage.getReference().child("mountains.jpg");
+            try {
+                final File localFile = File.createTempFile("Images", "bmp");
+                ref.getFile(localFile).addOnSuccessListener(new OnSuccessListener< FileDownloadTask.TaskSnapshot >() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        my_image = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                        Glide.with(getApplicationContext()).load(my_image).into(profile_dp);
+                        Log.e("Profile upload ", " my_image ");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(EditProfile.this, e.getMessage(), Toast.LENGTH_LONG).show();
+
+                        Glide.with(getApplicationContext()).load(firebaseUser.getPhotoUrl()).into(profile_dp);
+                    }
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+                Glide.with(getApplicationContext()).load(firebaseUser.getPhotoUrl()).into(profile_dp);
+                Toast.makeText(EditProfile.this, "Profile not uploaded.", Toast.LENGTH_LONG).show();
+            }
+
+        }else {
+
+            Glide.with(getApplicationContext()).load(R.drawable.profile_).into(profile_dp);
+            Log.e("Profile upload ", " profile not upload in imageview ");
+            StorageReference ref = storage.getReference().child("mountains.jpg");
+            try {
+                final File localFile = File.createTempFile("Images", "bmp");
+                ref.getFile(localFile).addOnSuccessListener(new OnSuccessListener< FileDownloadTask.TaskSnapshot >() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        my_image = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                        Glide.with(getApplicationContext()).load(my_image).into(profile_dp);
+                        Log.e("Profile upload ", " my_image ");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(EditProfile.this, e.getMessage(), Toast.LENGTH_LONG).show();
+
+                        Glide.with(getApplicationContext()).load(R.drawable.profile_).into(profile_dp);
+                    }
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+                Glide.with(getApplicationContext()).load(R.drawable.profile_).into(profile_dp);
+                Toast.makeText(EditProfile.this, "Profile not uploaded.", Toast.LENGTH_LONG).show();
+            }
         }
+
+
 
 
 

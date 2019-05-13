@@ -43,6 +43,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Settings_Activity extends AppCompatActivity implements View.OnClickListener {
 
+    private static final String TAG = "Settings_Activity=> ";
     private TextView sign_out,user_name,edit_account,home,addwork;
     private FirebaseAuth firebaseAuth;
     private ImageView back;
@@ -73,44 +74,73 @@ public class Settings_Activity extends AppCompatActivity implements View.OnClick
 
 
         user_name.setText(firebaseUser.getDisplayName());
-        Glide.with(getApplicationContext()).load(firebaseUser.getPhotoUrl()).into(user_profile_pic);
 
         SharedPreferences.Editor editor = getSharedPreferences("MyPic" , MODE_PRIVATE).edit();
         editor.putString("firebase_pic", String.valueOf(firebaseUser.getPhotoUrl()));
         editor.commit();
 
-        // get image from firebase storage :
-        StorageReference ref = storage.getReference().child("mountains.jpg");
-        try {
-            final File localFile = File.createTempFile("Images", "bmp");
-            ref.getFile(localFile).addOnSuccessListener(new OnSuccessListener< FileDownloadTask.TaskSnapshot >() {
-                @Override
-                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                    my_image = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                    Glide.with(getApplicationContext()).load(my_image).into(user_profile_pic);
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(Settings_Activity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-                    Glide.with(getApplicationContext()).load(firebaseUser.getPhotoUrl()).into(user_profile_pic);
-                }
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
-            Glide.with(getApplicationContext()).load(firebaseUser.getPhotoUrl()).into(user_profile_pic);
-            Toast.makeText(Settings_Activity.this, "Profile not uploaded.", Toast.LENGTH_LONG).show();
+        Log.e(TAG, "onCreate: "+firebaseUser.getPhotoUrl() );
+
+
+        if (firebaseUser.getPhotoUrl()!=null && !firebaseUser.getPhotoUrl().toString().equalsIgnoreCase("")){
+            // get image from firebase storage :
+            StorageReference ref = storage.getReference().child("mountains.jpg");
+            try {
+                final File localFile = File.createTempFile("Images", "bmp");
+                ref.getFile(localFile).addOnSuccessListener(new OnSuccessListener< FileDownloadTask.TaskSnapshot >() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        my_image = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                        Glide.with(getApplicationContext()).load(my_image).into(user_profile_pic);
+                        Log.e("Profile upload ", " my_image ");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(Settings_Activity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+
+                        Glide.with(getApplicationContext()).load(firebaseUser.getPhotoUrl()).into(user_profile_pic);
+                    }
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+                Glide.with(getApplicationContext()).load(firebaseUser.getPhotoUrl()).into(user_profile_pic);
+                Toast.makeText(Settings_Activity.this, "Profile not uploaded.", Toast.LENGTH_LONG).show();
+            }
+
+        }else {
+
+             Glide.with(getApplicationContext()).load(R.drawable.profile_).into(user_profile_pic);
+            Log.e("Profile upload ", " profile not upload in imageview ");
+            StorageReference ref = storage.getReference().child("mountains.jpg");
+            try {
+                final File localFile = File.createTempFile("Images", "bmp");
+                ref.getFile(localFile).addOnSuccessListener(new OnSuccessListener< FileDownloadTask.TaskSnapshot >() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        my_image = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                        Glide.with(getApplicationContext()).load(my_image).into(user_profile_pic);
+                        Log.e("Profile upload ", " my_image ");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(Settings_Activity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+
+                        Glide.with(getApplicationContext()).load(R.drawable.profile_).into(user_profile_pic);
+                    }
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+                Glide.with(getApplicationContext()).load(R.drawable.profile_).into(user_profile_pic);
+                Toast.makeText(Settings_Activity.this, "Profile not uploaded.", Toast.LENGTH_LONG).show();
+            }
+
         }
 
 
 
 
-/*
-        SharedPreferences sharedPreferences = getSharedPreferences("USER_PROFILE", MODE_PRIVATE);
-        String image = sharedPreferences.getString("myprofile" , null);
-        Bitmap profile = decodeBase64(image);
-
-        Glide.with(getApplicationContext()).load(profile).into(user_profile_pic);*/
 
         home.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -206,7 +236,7 @@ public class Settings_Activity extends AppCompatActivity implements View.OnClick
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Settings_Activity.this, EditProfile.class);
-                intent.putExtra("Picture" , String.valueOf(firebaseUser.getPhotoUrl()));
+              //  intent.putExtra("Picture" , String.valueOf(firebaseUser.getPhotoUrl()));
                 startActivity(intent);
             }
         });
