@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
+import static com.example.dreamilyeats.HomePage.showDialogBox;
+import static com.example.dreamilyeats.HomePage.cancelDialogBox;
 
 public class NetworkConnectionCheck extends BroadcastReceiver {
     AlertDialog.Builder builder;
@@ -20,8 +22,11 @@ public class NetworkConnectionCheck extends BroadcastReceiver {
             if(isOnline(context)) {
                 Log.e(TAG, "Online Connect Internet");
 
+                cancelDialogBox();
 
             } else {
+
+                showDialogBox();
                 Log.e(TAG, "COnnection Failure !!");
             }
         } catch (NullPointerException e) {

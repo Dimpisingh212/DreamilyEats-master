@@ -84,7 +84,7 @@ public class Settings_Activity extends AppCompatActivity implements View.OnClick
 
         if (firebaseUser.getPhotoUrl()!=null && !firebaseUser.getPhotoUrl().toString().equalsIgnoreCase("")){
             // get image from firebase storage :
-            StorageReference ref = storage.getReference().child("mountains.jpg");
+            StorageReference ref = storage.getReference().child(firebaseUser.getUid()+"mountains.jpg");
             try {
                 final File localFile = File.createTempFile("Images", "bmp");
                 ref.getFile(localFile).addOnSuccessListener(new OnSuccessListener< FileDownloadTask.TaskSnapshot >() {
@@ -112,7 +112,7 @@ public class Settings_Activity extends AppCompatActivity implements View.OnClick
 
              Glide.with(getApplicationContext()).load(R.drawable.profile_).into(user_profile_pic);
             Log.e("Profile upload ", " profile not upload in imageview ");
-            StorageReference ref = storage.getReference().child("mountains.jpg");
+            StorageReference ref = storage.getReference().child(firebaseUser.getUid()+"mountains.jpg");
             try {
                 final File localFile = File.createTempFile("Images", "bmp");
                 ref.getFile(localFile).addOnSuccessListener(new OnSuccessListener< FileDownloadTask.TaskSnapshot >() {

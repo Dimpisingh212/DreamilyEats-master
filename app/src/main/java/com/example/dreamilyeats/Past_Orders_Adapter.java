@@ -2,6 +2,7 @@ package com.example.dreamilyeats;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.dreamilyeats.Model.PlaceOrderListModel;
+import com.google.gson.Gson;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -34,6 +36,7 @@ public class Past_Orders_Adapter extends RecyclerView.Adapter<Past_Orders_Adapte
 
     Context context;
     ArrayList<PlaceOrderListModel> arrayList;
+    ArrayList<PlaceOrderListModel> arrayList_new;
     final GlobalArray globalArray = (GlobalArray) getApplicationContext();
     private String TAG = "Past_Orders_Adapter =>";
     private  int actual_diff;
@@ -123,10 +126,21 @@ public class Past_Orders_Adapter extends RecyclerView.Adapter<Past_Orders_Adapte
 
 
 
-        if(actual_diff  > 50) {
+        if(actual_diff  > 10) {
             globalArray.newplaceOrderListModels.add(new PlaceOrderListModel(arrayList.get(i).getHotel_image(), arrayList.get(i).getHotel_name(), arrayList.get(i).getTime_date(), arrayList.get(i).getTotal_cost()));
+
+
+            //arrayList_new.add(new PlaceOrderListModel(arrayList.get(i).getHotel_image(), arrayList.get(i).getHotel_name(), arrayList.get(i).getTime_date(), arrayList.get(i).getTotal_cost()));
+
+
+            SharedPreferences.Editor editor = getApplicationContext().getSharedPreferences("Update_List" , Context.MODE_PRIVATE).edit();
+            Gson gson = new Gson();
+            String json = gson.toJson(globalArray.newplaceOrderListModels);
+            editor.putString("List", json);
+            editor.commit();
+            //arrayList_new.remove(i);
             globalArray.placeOrderListModels.remove(i);
-            //notifyItemRangeChanged(i, globalArray.placeOrderListModels.size());
+
 
             Log.e(TAG , "My New global array : : " +globalArray.newplaceOrderListModels);
 

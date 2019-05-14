@@ -21,6 +21,8 @@ public class HomePage extends AppCompatActivity implements BottomNavigationView.
     private BottomNavigationView bottom_navigation;
 
 
+    public AlertDialog.Builder builder;
+    public static AlertDialog alertDialog;
 
 
 
@@ -50,11 +52,26 @@ public class HomePage extends AppCompatActivity implements BottomNavigationView.
 
 
 
+        builder = new AlertDialog.Builder(this);
+        builder.setIcon(android.R.drawable.ic_dialog_alert);
+        builder.setTitle("Alert");
+        builder.setMessage("Network Connection off!!").setCancelable(false);
+        alertDialog = builder.create();
 
 
 
 
     }
+
+    public static void showDialogBox() {
+       alertDialog.show();
+
+    }
+
+    public static void cancelDialogBox() {
+     alertDialog.cancel();
+    }
+
 
     private boolean loadFragment(Fragment fragment) {
         if (fragment != null)
@@ -62,6 +79,7 @@ public class HomePage extends AppCompatActivity implements BottomNavigationView.
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_frame, fragment).commit();
             return true;
         }
+
         return false;
     }
 
@@ -93,7 +111,8 @@ public class HomePage extends AppCompatActivity implements BottomNavigationView.
 
     @Override
     public void onBackPressed() {
-        new AlertDialog.Builder(this).setIcon(android.R.drawable.ic_dialog_alert).setTitle("Exit")
+        new AlertDialog.Builder(this).setIcon(android.R.drawable.ic_dialog_alert)
+                .setTitle("Exit")
                 .setMessage("Are you sure you want to exit?")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override

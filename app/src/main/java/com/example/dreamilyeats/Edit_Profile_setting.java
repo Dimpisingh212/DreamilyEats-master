@@ -271,16 +271,18 @@ public class Edit_Profile_setting extends AppCompatActivity {
 
     public void upload() {
 
+
         // Create a storage reference from our app
         StorageReference storageRef = storage.getReference();
         // Create a reference to "mountains.jpg"
-        StorageReference childRef = storageRef.child("mountains.jpg");
+        StorageReference childRef = storageRef.child(firebaseUser.getUid()+"mountains.jpg");
         // Create a reference to 'images/mountains.jpg'
-        StorageReference mountainImagesRef = storageRef.child("images/mountains.jpg");
+       /* StorageReference mountainImagesRef = storageRef.child("images/mountains.jpg");
         // While the file names are the same, the references point to different files
         childRef.getName().equals(mountainImagesRef.getName());    // true
         childRef.getPath().equals(mountainImagesRef.getPath());    // false
-
+*/
+        //StorageReference riversRef = mStorageRef.child("posts/images" + userId + "/" + String.valueOf(System.currentTimeMillis()) + ".jpg");
 
         // Get the data from an ImageView as bytes
         profile_dp.setDrawingCacheEnabled(true);
@@ -311,7 +313,7 @@ public class Edit_Profile_setting extends AppCompatActivity {
     public void getImage() {
         if (firebaseUser.getPhotoUrl() != null && !firebaseUser.getPhotoUrl().toString().equalsIgnoreCase("")) {
             // get image from firebase storage :
-            StorageReference ref = storage.getReference().child("mountains.jpg");
+            StorageReference ref = storage.getReference().child(firebaseUser.getUid()+"mountains.jpg");
             try {
                 final File localFile = File.createTempFile("Images", "bmp");
                 ref.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
@@ -339,7 +341,7 @@ public class Edit_Profile_setting extends AppCompatActivity {
 
             Glide.with(getApplicationContext()).load(R.drawable.profile_).into(profile_dp);
             Log.e("Profile upload ", " profile not upload in imageview ");
-            StorageReference ref = storage.getReference().child("mountains.jpg");
+            StorageReference ref = storage.getReference().child(firebaseUser.getUid()+"mountains.jpg");
             try {
                 final File localFile = File.createTempFile("Images", "bmp");
                 ref.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {

@@ -46,17 +46,19 @@
         </android.support.v7.widget.SearchView>
 
 
-        <EditText
-            android:id="@+id/search_line"
-            android:layout_width="380dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="10dp"
-            android:backgroundTint="#ffffff"
-            android:hint="  Search for a restaurants or dish"
-            android:textColorHint="#B4AEAE"
-            android:textSize="18dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+    <EditText
+        android:id="@+id/search_line"
+        android:layout_width="380dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="#ffffff"
+        android:hint="  Search for a restaurants or dish"
+        android:textColorHint="#B4AEAE"
+        android:textSize="18dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/search_view"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
         <View
             android:id="@+id/view15"
