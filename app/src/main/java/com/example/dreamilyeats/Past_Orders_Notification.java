@@ -51,7 +51,7 @@ public class Past_Orders_Notification extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         recycler_view.setLayoutManager(linearLayoutManager);
 
-        final GlobalArray globalArray = (GlobalArray) getActivity().getApplicationContext();
+        //final GlobalArray globalArray = (GlobalArray) getActivity().getApplicationContext();
        // arrayList = globalArray.newplaceOrderListModels;
 
         preferences = getApplicationContext().getSharedPreferences("Update_List" , Context.MODE_PRIVATE);
@@ -60,15 +60,15 @@ public class Past_Orders_Notification extends Fragment {
         Type type = new TypeToken<List<PlaceOrderListModel>>(){}.getType();
         arrayList = gson.fromJson(json, type);
 
-        Log.e("New_Past_Orders" , "Array :" +arrayList.toString());
-        Log.e("New_Past_Orders" , "json :" +json);
 
 
 
-        New_Past_Orders_Adapter new_past_orders_adapter = new New_Past_Orders_Adapter(getActivity(), arrayList);
-        recycler_view.setAdapter(new_past_orders_adapter);
-
-
+        if (arrayList!=null && arrayList.size()>0){
+            Log.e("New_Past_Orders" , "Array :" +arrayList.toString());
+            Log.e("New_Past_Orders" , "json :" +json);
+            New_Past_Orders_Adapter new_past_orders_adapter = new New_Past_Orders_Adapter(getActivity(), arrayList);
+            recycler_view.setAdapter(new_past_orders_adapter);
+        }
 
 
         return view;

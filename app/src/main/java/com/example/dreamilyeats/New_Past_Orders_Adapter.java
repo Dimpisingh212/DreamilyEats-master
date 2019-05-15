@@ -79,7 +79,11 @@ public class New_Past_Orders_Adapter extends RecyclerView.Adapter<New_Past_Order
 
     @Override
     public int getItemCount() {
-        return arrayList.size();
+        if(arrayList != null && arrayList.size() > 0) {
+            return arrayList.size();
+        } else {
+            return  0;
+        }
     }
 
     public class Viewholder extends RecyclerView.ViewHolder {

@@ -1,9 +1,12 @@
 package com.example.dreamilyeats;
 
+import android.content.BroadcastReceiver;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -11,17 +14,21 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.dreamilyeats.NetworkConnectivity.NetworkConnectionCheck;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class HomePage extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+public class HomePage extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, NetworkConnectionCheck.ConnectivityReceiverListener {
 
     private Toolbar toolbar;
     private FirebaseAuth firebaseAuth;
     private BottomNavigationView bottom_navigation;
 
 
-    public AlertDialog.Builder builder;
+    public  AlertDialog.Builder builder;
     public static AlertDialog alertDialog;
 
 
@@ -49,7 +56,6 @@ public class HomePage extends AppCompatActivity implements BottomNavigationView.
         }
 
 
-
         builder = new AlertDialog.Builder(this);
         builder.setIcon(android.R.drawable.ic_dialog_alert);
         builder.setTitle("Alert");
@@ -57,9 +63,38 @@ public class HomePage extends AppCompatActivity implements BottomNavigationView.
         alertDialog = builder.create();
 
 
-
+        // Manually checking internet connection
+        checkConnection();
 
     }
+
+    private void checkConnection() {
+        boolean isConnected = NetworkConnectionCheck.isConnected();
+        showToast(isConnected);
+    }
+
+    private void showToast(boolean isConnected) {
+        String message;
+        int color;
+        if (isConnected) {
+            message = "Good! Connected to Internet";
+            color = Color.WHITE;
+        } else {
+            message = "Sorry! Not connected to internet";
+            color = Color.RED;
+        }
+
+        Toast.makeText(HomePage.this, " "+message, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // register connection status listener
+        GlobalArray.getInstance().setConnectivityListener(this);
+    }
+
 
     public static void showDialogBox() {
        alertDialog.show();
@@ -124,5 +159,10 @@ public class HomePage extends AppCompatActivity implements BottomNavigationView.
                     }
                 }).setNegativeButton("No", null).show();
 
+    }
+
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        showToast(isConnected);
     }
 }

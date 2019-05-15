@@ -126,7 +126,7 @@ public class Past_Orders_Adapter extends RecyclerView.Adapter<Past_Orders_Adapte
 
 
 
-        if(actual_diff  > 10) {
+        if(actual_diff  > 50) {
             globalArray.newplaceOrderListModels.add(new PlaceOrderListModel(arrayList.get(i).getHotel_image(), arrayList.get(i).getHotel_name(), arrayList.get(i).getTime_date(), arrayList.get(i).getTotal_cost()));
 
 

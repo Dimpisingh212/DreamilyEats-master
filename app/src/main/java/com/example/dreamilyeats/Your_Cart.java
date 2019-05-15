@@ -139,8 +139,10 @@ public class Your_Cart extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if(!(current_location.getText().toString().equalsIgnoreCase("Current location") && current_location.getText().toString().equals(null))) {
+                if((current_location.getText().toString().equalsIgnoreCase("Current location") && current_location.getText().toString().equals(null))) {
+                    Toast.makeText(Your_Cart.this, "Add current location" , Toast.LENGTH_LONG).show();
 
+                } else {
                     globalArray.placeOrderListModels.add(new PlaceOrderListModel(image, GlobalArray.hotel_name, formattedDate, total_billing_charge.getText().toString()));
                     Log.e(TAG , "Global array : " +globalArray.placeOrderListModels);
                     AlertDialog alertDialog = new AlertDialog.Builder(Your_Cart.this).create();
@@ -160,8 +162,7 @@ public class Your_Cart extends AppCompatActivity {
                         }
                     });
                     alertDialog.show();
-                } else {
-                    Toast.makeText(Your_Cart.this, "Add current location" , Toast.LENGTH_LONG).show();
+
                 }
 
             }
