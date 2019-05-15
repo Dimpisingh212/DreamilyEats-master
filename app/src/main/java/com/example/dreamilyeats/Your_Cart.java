@@ -139,7 +139,7 @@ public class Your_Cart extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if(!(current_location.getText().toString().equals(null))) {
+                if(!(current_location.getText().toString().equalsIgnoreCase("Current location") && current_location.getText().toString().equals(null))) {
 
                     globalArray.placeOrderListModels.add(new PlaceOrderListModel(image, GlobalArray.hotel_name, formattedDate, total_billing_charge.getText().toString()));
                     Log.e(TAG , "Global array : " +globalArray.placeOrderListModels);

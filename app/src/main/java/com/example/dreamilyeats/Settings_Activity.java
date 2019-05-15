@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.facebook.login.LoginManager;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -206,6 +207,7 @@ public class Settings_Activity extends AppCompatActivity implements View.OnClick
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         firebaseAuth.signOut();
+                        LoginManager.getInstance().logOut();
                         Intent intent = new Intent(Settings_Activity.this, LoginActivity.class);
                         startActivity(intent);
                         dialog.dismiss();

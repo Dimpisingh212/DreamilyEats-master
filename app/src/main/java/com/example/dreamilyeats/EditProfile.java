@@ -83,26 +83,10 @@ public class EditProfile extends AppCompatActivity {
         String n = preferences.getString("username", null);
         user_name.setText(n);
 
-      /*  SharedPreferences preferences1 = getSharedPreferences("USER_DATA", MODE_PRIVATE);
-        String uname = preferences1.getString("Editusername", null);
-        user_name.setText(uname);*/
 
         user_name.setText(firebaseUser.getDisplayName());
         email_id.setText(firebaseUser.getEmail());
 
-
-      /*  //getting profile Pic from records that are stored in login activity :
-        SharedPreferences editor_record = getSharedPreferences("User_record" , MODE_PRIVATE);
-        String record_data = editor_record.getString("my_record" , null);
-        JsonObject jsonObject = (JsonObject) new JsonParser().parse(record_data);
-        Log.e(TAG, "UserRecorded_data : " +jsonObject.toString());*/
-
-
-        // getting profile by intent :
-       /* Intent intent = getIntent();
-        String photo = intent.getStringExtra("Picture");
-        final Bitmap profile = decodeBase64(photo);
-        Glide.with(getApplicationContext()).load(profile).into(profile_dp);*/
 
 
         if (firebaseUser.getPhotoUrl()!=null && !firebaseUser.getPhotoUrl().toString().equalsIgnoreCase("")){

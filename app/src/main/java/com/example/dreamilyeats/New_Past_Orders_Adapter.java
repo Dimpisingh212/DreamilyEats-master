@@ -37,6 +37,7 @@ public class New_Past_Orders_Adapter extends RecyclerView.Adapter<New_Past_Order
     SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss aa  dd:MMMM:yyyy");
     Date myTime = Calendar.getInstance().getTime();
     String currentTime = sdf.format(myTime);
+    SharedPreferences preferences;
 
 
 
@@ -56,14 +57,24 @@ public class New_Past_Orders_Adapter extends RecyclerView.Adapter<New_Past_Order
     public void onBindViewHolder(@NonNull New_Past_Orders_Adapter.Viewholder viewholder, int i) {
         //arrayList = globalArray.getNewplaceOrderListModels();
 
+        /*preferences = getApplicationContext().getSharedPreferences("Update_List" , Context.MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = preferences.getString("List", null);
+        Type type = new TypeToken<List<PlaceOrderListModel>>(){}.getType();
+        arrayList = gson.fromJson(json, type);
+
         Log.e("New_Past_Orders" , "Array :" +arrayList.toString());
-       // Log.e("New_Past_Orders" , "json :" +json);
+        Log.e("New_Past_Orders" , "json :" +json);
+*/
 
+        if(arrayList != null && arrayList.size() > 0) {
 
-        Glide.with(context).load(arrayList.get(i).getHotel_image()).into(viewholder.food_image);
-        viewholder.hotel_name.setText(arrayList.get(i).getHotel_name());
-        viewholder.time_date.setText(arrayList.get(i).getTime_date());
+            Glide.with(context).load(arrayList.get(i).getHotel_image()).into(viewholder.food_image);
+            viewholder.hotel_name.setText(arrayList.get(i).getHotel_name());
+            viewholder.time_date.setText(arrayList.get(i).getTime_date());
+            viewholder.total.setText(arrayList.get(i).getTotal_cost());
 
+        }
     }
 
     @Override
@@ -75,7 +86,7 @@ public class New_Past_Orders_Adapter extends RecyclerView.Adapter<New_Past_Order
 
         CardView card_view;
         ImageView food_image;
-        TextView hotel_name,time_date;
+        TextView hotel_name,time_date,total;
 
         public Viewholder(@NonNull View itemView) {
             super(itemView);
@@ -84,6 +95,7 @@ public class New_Past_Orders_Adapter extends RecyclerView.Adapter<New_Past_Order
             food_image = itemView.findViewById(R.id.food_image);
             hotel_name = itemView.findViewById(R.id.hotel_name);
             time_date = itemView.findViewById(R.id.time_date);
+            total = itemView.findViewById(R.id.total);
 
         }
     }

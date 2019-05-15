@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,8 +32,9 @@ public class Past_Orders_Notification extends Fragment {
     private CardView card_view;
     private ImageView food_image;
     private TextView hotel_name;
-    private ArrayList<PlaceOrderListModel> arrayList;
-    SharedPreferences preferences;
+    private ArrayList<PlaceOrderListModel> arrayList = new ArrayList<>();
+    private  SharedPreferences preferences;
+
 
 
     @Override
@@ -45,16 +47,23 @@ public class Past_Orders_Notification extends Fragment {
         food_image = view.findViewById(R.id.food_image);
         hotel_name = view.findViewById(R.id.hotel_name);
         recycler_view = view.findViewById(R.id.recycler_view);
+
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         recycler_view.setLayoutManager(linearLayoutManager);
 
         final GlobalArray globalArray = (GlobalArray) getActivity().getApplicationContext();
-        //arrayList = globalArray.newplaceOrderListModels;
+       // arrayList = globalArray.newplaceOrderListModels;
+
         preferences = getApplicationContext().getSharedPreferences("Update_List" , Context.MODE_PRIVATE);
         Gson gson = new Gson();
         String json = preferences.getString("List", null);
         Type type = new TypeToken<List<PlaceOrderListModel>>(){}.getType();
         arrayList = gson.fromJson(json, type);
+
+        Log.e("New_Past_Orders" , "Array :" +arrayList.toString());
+        Log.e("New_Past_Orders" , "json :" +json);
+
+
 
         New_Past_Orders_Adapter new_past_orders_adapter = new New_Past_Orders_Adapter(getActivity(), arrayList);
         recycler_view.setAdapter(new_past_orders_adapter);

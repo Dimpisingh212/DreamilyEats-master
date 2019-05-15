@@ -25,6 +25,7 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -92,6 +93,7 @@ public class LoginActivity extends AppCompatActivity {
 
         }*/
 
+      //  LoginManager.getInstance().logOut();
 
 
 
@@ -256,7 +258,7 @@ public class LoginActivity extends AppCompatActivity {
                     Log.e(TAG, "User Pic :" + firebaseUser.getPhotoUrl());
 
 
-                    JsonObject jsonObject = new JsonObject();
+                    /*JsonObject jsonObject = new JsonObject();
                     jsonObject.addProperty("name",firebaseUser.getDisplayName());
                     jsonObject.addProperty("email_id",firebaseUser.getEmail());
                     jsonObject.addProperty("phone_number",firebaseUser.getPhoneNumber());
@@ -264,7 +266,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     SharedPreferences.Editor editor_record = getSharedPreferences("User_record" , MODE_PRIVATE).edit();
                     editor_record.putString("my_record" , String.valueOf(jsonObject));
-                    editor_record.commit();
+                    editor_record.commit();*/
 
 
                     Toast.makeText(LoginActivity.this, "Successful", Toast.LENGTH_LONG).show();
