@@ -139,7 +139,10 @@ public class Your_Cart extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if((current_location.getText().toString().equalsIgnoreCase("Current location") && current_location.getText().toString().equals(null))) {
+                String loc = current_location.getText().toString();
+                Log.e(TAG, "Current loc value :" +loc);
+
+                if(loc.equalsIgnoreCase("Current location") && loc.equals("")) {
                     Toast.makeText(Your_Cart.this, "Add current location" , Toast.LENGTH_LONG).show();
 
                 } else {
