@@ -17,7 +17,7 @@ public class GlobalArray extends Application {
     public static String time;
 
     //For Broadcast Receeiver Internet checking :
-    private static GlobalArray mInstance;
+  /*  private static GlobalArray mInstance;
 
     @Override
     public void onCreate() {
@@ -33,7 +33,7 @@ public class GlobalArray extends Application {
 
     public void setConnectivityListener(NetworkConnectionCheck.ConnectivityReceiverListener listener) {
         NetworkConnectionCheck.connectivityReceiverListener = listener;
-    }
+    }*/
 
 
     public ArrayList<MyItemArray> myItemArrays = new ArrayList<>();

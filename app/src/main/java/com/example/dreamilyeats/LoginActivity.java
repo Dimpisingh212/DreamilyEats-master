@@ -175,7 +175,9 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(LoginActivity.this, "Fill All Fields", Toast.LENGTH_LONG).show();
                         }
                     } else {
+
                         Toast.makeText(LoginActivity.this, "Plz Turn On your Data Connection.", Toast.LENGTH_LONG).show();
+                        Log.e(TAG, "Network Connection off");
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -209,6 +211,7 @@ public class LoginActivity extends AppCompatActivity {
                     if(NetworkConnectionCheck.isOnline(LoginActivity.this)) {
                         login_button.performClick();
                     } else {
+                        Log.e(TAG, "Network Connection off");
                         Toast.makeText(LoginActivity.this, "Plz Turn On your Data Connection.", Toast.LENGTH_LONG).show();
                     }
                 }

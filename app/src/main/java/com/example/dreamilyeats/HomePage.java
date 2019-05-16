@@ -3,6 +3,7 @@ package com.example.dreamilyeats;
 import android.content.BroadcastReceiver;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -20,8 +21,10 @@ import android.widget.Toast;
 
 import com.example.dreamilyeats.NetworkConnectivity.NetworkConnectionCheck;
 import com.google.firebase.auth.FirebaseAuth;
+import static com.example.dreamilyeats.NetworkConnectivity.NetworkConnectionCheck.isOnline;
 
-public class HomePage extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, NetworkConnectionCheck.ConnectivityReceiverListener {
+public class HomePage extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+        //, NetworkConnectionCheck.ConnectivityReceiverListener {
 
     private Toolbar toolbar;
     private FirebaseAuth firebaseAuth;
@@ -56,54 +59,70 @@ public class HomePage extends AppCompatActivity implements BottomNavigationView.
         }
 
 
+        // Manually checking internet connection
+       // checkConnection();
+
+
         builder = new AlertDialog.Builder(this);
         builder.setIcon(android.R.drawable.ic_dialog_alert);
         builder.setTitle("Alert");
         builder.setMessage("Network Connection off!!").setCancelable(false);
         alertDialog = builder.create();
 
+        if (!isOnline(this)){
 
-        // Manually checking internet connection
-        checkConnection();
-
-    }
-
-    private void checkConnection() {
-        boolean isConnected = NetworkConnectionCheck.isConnected();
-        showToast(isConnected);
-    }
-
-    private void showToast(boolean isConnected) {
-        String message;
-        int color;
-        if (isConnected) {
-            message = "Good! Connected to Internet";
-            color = Color.WHITE;
-        } else {
-            message = "Sorry! Not connected to internet";
-            color = Color.RED;
+            alertDialog.show();
         }
 
-        Toast.makeText(HomePage.this, " "+message, Toast.LENGTH_LONG).show();
+
     }
+
+    public static void showDialogBox() {
+        alertDialog.show();
+    }
+
+    public static void cancelDialogBox() {
+        alertDialog.cancel();
+    }
+
+   /* private void checkConnection() {
+        boolean isConnected = NetworkConnectionCheck.isConnected();
+        showDialog(isConnected);
+    }
+
+    private void showDialog(boolean isConnected) {
+        String message;
+        if (isConnected) {
+            message = "Good! Connected to Internet";
+            Toast.makeText(HomePage.this, " "+message, Toast.LENGTH_LONG).show();
+
+        } else {
+            builder = new AlertDialog.Builder(this);
+            builder.setIcon(android.R.drawable.ic_dialog_alert);
+            builder.setTitle("Alert");
+            builder.setMessage("Network Connection off!!").setCancelable(false);
+            alertDialog = builder.create();
+            builder.show();
+
+
+
+
+        }
+
+    }*/
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        // register connection status listener
+       /* // register connection status listener
         GlobalArray.getInstance().setConnectivityListener(this);
-    }
-
-
-    public static void showDialogBox() {
-       alertDialog.show();
+        checkConnection();*/
+        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+        HomePage.this.registerReceiver(new NetworkConnectionCheck(), intentFilter);
 
     }
 
-    public static void cancelDialogBox() {
-     alertDialog.cancel();
-    }
 
 
     private boolean loadFragment(Fragment fragment) {
@@ -123,18 +142,22 @@ public class HomePage extends AppCompatActivity implements BottomNavigationView.
         switch (menuItem.getItemId()) {
             case R.id.home:
                 fragment = new Home_Fragment();
+               // checkConnection();
                 break;
 
             case R.id.deshboard:
                 fragment = new Explore_Fragment();
+              //  checkConnection();
                 break;
 
             case R.id.notification:
                 fragment = new Notification_Fragment();
+               // checkConnection();
                 break;
 
             case R.id.profile:
                 fragment = new Profile_Fragment();
+                //checkConnection();
                 break;
         }
 
@@ -161,8 +184,8 @@ public class HomePage extends AppCompatActivity implements BottomNavigationView.
 
     }
 
-    @Override
+    /*@Override
     public void onNetworkConnectionChanged(boolean isConnected) {
-        showToast(isConnected);
-    }
+        showDialog(isConnected);
+    }*/
 }

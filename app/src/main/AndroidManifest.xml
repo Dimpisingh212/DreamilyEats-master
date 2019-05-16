@@ -23,6 +23,17 @@
         android:roundIcon="@drawable/dreamily_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <receiver android:name=".NetworkConnectivity.NetworkConnectionCheck"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
+                <action android:name="android.net.ConnectivityManager.CONNECTIVITY_ACTION" />
+            </intent-filter>
+        </receiver>
+
         <activity android:name=".RetrofitDemo">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -67,12 +78,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCy78CGe_ZODVevdCca-rdyNFTUlaMLG10" />
 
-        <receiver android:name=".NetworkConnectivity.NetworkConnectionCheck" >
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
-                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
-            </intent-filter>
-        </receiver>
+
 
     </application>
 
