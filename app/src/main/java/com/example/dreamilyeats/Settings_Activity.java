@@ -3,6 +3,7 @@ package com.example.dreamilyeats;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -25,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.dreamilyeats.NetworkConnectivity.NetworkConnectionCheck;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -42,6 +44,8 @@ import java.net.URL;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.example.dreamilyeats.NetworkConnectivity.NetworkConnectionCheck.isOnline;
+
 public class Settings_Activity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "Settings_Activity=> ";
@@ -51,6 +55,11 @@ public class Settings_Activity extends AppCompatActivity implements View.OnClick
     private CircleImageView user_profile_pic;
     private Bitmap my_image;
     private FirebaseStorage storage;
+
+    public  AlertDialog.Builder builder;
+    public static AlertDialog alertDialog;
+
+    private NetworkConnectionCheck receiver =new NetworkConnectionCheck();
 
 
     @Override
@@ -68,6 +77,17 @@ public class Settings_Activity extends AppCompatActivity implements View.OnClick
         edit_account=findViewById(R.id.edit_account);
         home=findViewById(R.id.home);
         addwork=findViewById(R.id.addwork);
+
+        builder = new AlertDialog.Builder(this);
+        builder.setIcon(android.R.drawable.ic_dialog_alert);
+        builder.setTitle("Alert");
+        builder.setMessage("Network Connection off!!").setCancelable(false);
+        alertDialog = builder.create();
+
+        if (!isOnline(this)){
+
+            alertDialog.show();
+        }
 
         SharedPreferences preferences = getSharedPreferences("User", Context.MODE_PRIVATE);
         String n = preferences.getString("username", null);
@@ -244,6 +264,23 @@ public class Settings_Activity extends AppCompatActivity implements View.OnClick
         });
     }
 
+    public static void showSettingDialogBox() {
+        alertDialog.show();
+    }
+
+    public static void cancelSettingDialogBox() {
+        alertDialog.cancel();
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+        receiver = new NetworkConnectionCheck();
+        Settings_Activity.this.registerReceiver(receiver, intentFilter);
+
+    }
 
 
     public static Bitmap decodeBase64(String input) {
@@ -270,5 +307,14 @@ public class Settings_Activity extends AppCompatActivity implements View.OnClick
             case R.id.sign_out:
                 break;
         }*/
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        // Unregisters BroadcastReceiver when app is destroyed.
+        if (receiver != null) {
+            this.unregisterReceiver(receiver);
+        }
     }
 }

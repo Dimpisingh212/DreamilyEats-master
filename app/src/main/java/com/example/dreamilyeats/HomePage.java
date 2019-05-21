@@ -24,7 +24,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import static com.example.dreamilyeats.NetworkConnectivity.NetworkConnectionCheck.isOnline;
 
 public class HomePage extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
-        //, NetworkConnectionCheck.ConnectivityReceiverListener {
 
     private Toolbar toolbar;
     private FirebaseAuth firebaseAuth;
@@ -59,10 +58,6 @@ public class HomePage extends AppCompatActivity implements BottomNavigationView.
         }
 
 
-        // Manually checking internet connection
-       // checkConnection();
-
-
         builder = new AlertDialog.Builder(this);
         builder.setIcon(android.R.drawable.ic_dialog_alert);
         builder.setTitle("Alert");
@@ -85,39 +80,10 @@ public class HomePage extends AppCompatActivity implements BottomNavigationView.
         alertDialog.cancel();
     }
 
-   /* private void checkConnection() {
-        boolean isConnected = NetworkConnectionCheck.isConnected();
-        showDialog(isConnected);
-    }
-
-    private void showDialog(boolean isConnected) {
-        String message;
-        if (isConnected) {
-            message = "Good! Connected to Internet";
-            Toast.makeText(HomePage.this, " "+message, Toast.LENGTH_LONG).show();
-
-        } else {
-            builder = new AlertDialog.Builder(this);
-            builder.setIcon(android.R.drawable.ic_dialog_alert);
-            builder.setTitle("Alert");
-            builder.setMessage("Network Connection off!!").setCancelable(false);
-            alertDialog = builder.create();
-            builder.show();
-
-
-
-
-        }
-
-    }*/
 
     @Override
     protected void onResume() {
         super.onResume();
-
-       /* // register connection status listener
-        GlobalArray.getInstance().setConnectivityListener(this);
-        checkConnection();*/
         IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
         HomePage.this.registerReceiver(new NetworkConnectionCheck(), intentFilter);
 
@@ -142,22 +108,18 @@ public class HomePage extends AppCompatActivity implements BottomNavigationView.
         switch (menuItem.getItemId()) {
             case R.id.home:
                 fragment = new Home_Fragment();
-               // checkConnection();
                 break;
 
             case R.id.deshboard:
                 fragment = new Explore_Fragment();
-              //  checkConnection();
                 break;
 
             case R.id.notification:
                 fragment = new Notification_Fragment();
-               // checkConnection();
                 break;
 
             case R.id.profile:
                 fragment = new Profile_Fragment();
-                //checkConnection();
                 break;
         }
 
@@ -184,8 +146,4 @@ public class HomePage extends AppCompatActivity implements BottomNavigationView.
 
     }
 
-    /*@Override
-    public void onNetworkConnectionChanged(boolean isConnected) {
-        showDialog(isConnected);
-    }*/
 }

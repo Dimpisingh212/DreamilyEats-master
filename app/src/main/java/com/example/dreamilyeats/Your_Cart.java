@@ -2,6 +2,7 @@ package com.example.dreamilyeats;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.icu.text.DecimalFormat;
 import android.os.Build;
@@ -27,6 +28,7 @@ import android.widget.Toast;
 
 import com.example.dreamilyeats.Model.MyItemArray;
 import com.example.dreamilyeats.Model.PlaceOrderListModel;
+import com.example.dreamilyeats.NetworkConnectivity.NetworkConnectionCheck;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -34,6 +36,8 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import static com.example.dreamilyeats.NetworkConnectivity.NetworkConnectionCheck.isOnline;
 
 @RequiresApi(api = Build.VERSION_CODES.N)
 public class Your_Cart extends AppCompatActivity {
@@ -50,6 +54,10 @@ public class Your_Cart extends AppCompatActivity {
     private ImageView back;
     private int image = R.drawable.slide2;
 
+
+
+    public  AlertDialog.Builder builder;
+    public static AlertDialog alertDialog;
 
 
 
@@ -77,6 +85,10 @@ public class Your_Cart extends AppCompatActivity {
         restaurant_name.setText(GlobalArray.hotel_name);
         estimate_time.setText(GlobalArray.time);
         total_price1.setText(String.valueOf(delivery_charge));
+
+
+
+
 
         other_location.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,31 +151,45 @@ public class Your_Cart extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if((current_location.getText().toString().equalsIgnoreCase("Current location") || current_location.getText().toString().equals(null) || current_location.getText().toString().isEmpty())) {
-                    Toast.makeText(Your_Cart.this, "Add current location" , Toast.LENGTH_LONG).show();
+                if(isOnline(Your_Cart.this)){
+                    if((current_location.getText().toString().equalsIgnoreCase("Current location") || current_location.getText().toString().equals(null) || current_location.getText().toString().isEmpty())) {
+                        Toast.makeText(Your_Cart.this, "Add current location" , Toast.LENGTH_LONG).show();
 
+                    } else {
+                        globalArray.placeOrderListModels.add(new PlaceOrderListModel(image, GlobalArray.hotel_name, formattedDate, total_billing_charge.getText().toString()));
+                        Log.e(TAG , "Global array : " +globalArray.placeOrderListModels);
+                        AlertDialog alertDialog = new AlertDialog.Builder(Your_Cart.this).create();
+                        alertDialog.setTitle("DreamilyEats :");
+                        alertDialog.setMessage("Are you sure for Order");
+                        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                openingReceiptDialogBox();
+                                dialog.dismiss();
+                            }
+                        });
+                        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });//jjj
+                        alertDialog.show();
+
+                    }
                 } else {
-                    globalArray.placeOrderListModels.add(new PlaceOrderListModel(image, GlobalArray.hotel_name, formattedDate, total_billing_charge.getText().toString()));
-                    Log.e(TAG , "Global array : " +globalArray.placeOrderListModels);
-                    AlertDialog alertDialog = new AlertDialog.Builder(Your_Cart.this).create();
-                    alertDialog.setTitle("DreamilyEats :");
-                    alertDialog.setMessage("Are you sure for Order");
-                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            openingReceiptDialogBox();
-                            dialog.dismiss();
-                        }
-                    });
-                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });//jjj
-                    alertDialog.show();
+                    builder = new AlertDialog.Builder(Your_Cart.this);
+                    builder.setIcon(android.R.drawable.ic_dialog_alert);
+                    builder.setTitle("Alert");
+                    builder.setMessage("Network Connection off!!");
+                    alertDialog = builder.create();
 
+                    if (!isOnline(Your_Cart.this)){
+
+                        alertDialog.show();
+                    }
                 }
+
 
             }
         });
@@ -217,5 +243,17 @@ public class Your_Cart extends AppCompatActivity {
         alertDialog.setCancelable(false);
 
     }
+
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+        Your_Cart.this.registerReceiver(new NetworkConnectionCheck(), intentFilter);
+
+    }
+
+
 
 }

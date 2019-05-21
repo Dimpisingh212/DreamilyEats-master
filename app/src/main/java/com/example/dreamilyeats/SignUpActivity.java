@@ -2,8 +2,10 @@ package com.example.dreamilyeats;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -16,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dreamilyeats.InterfaceForEmailChecking.OnEmailCheckListener;
+import com.example.dreamilyeats.NetworkConnectivity.NetworkConnectionCheck;
 import com.facebook.CallbackManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -35,6 +38,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 
+import static com.example.dreamilyeats.NetworkConnectivity.NetworkConnectionCheck.isOnline;
+
 public class SignUpActivity extends AppCompatActivity {
 
     private static final String ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL = " " ;
@@ -45,6 +50,9 @@ public class SignUpActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private ProgressDialog PD;
     private AuthCredential authCredential;
+
+    public  AlertDialog.Builder builder;
+    public static AlertDialog alertDialog;
 
 
 
@@ -60,6 +68,19 @@ public class SignUpActivity extends AppCompatActivity {
         email_id = findViewById(R.id.email_id);
         confirm_password = findViewById(R.id.confirm_password);
         username = findViewById(R.id.username);
+
+
+        builder = new AlertDialog.Builder(this);
+        builder.setIcon(android.R.drawable.ic_dialog_alert);
+        builder.setTitle("Alert");
+        builder.setMessage("Network Connection off!!").setCancelable(false);
+        alertDialog = builder.create();
+
+        if (!isOnline(this)){
+
+            alertDialog.show();
+        }
+
 
         username.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -219,6 +240,23 @@ public class SignUpActivity extends AppCompatActivity {
 
             }
         });
+
+    }
+
+    public static void showSignUPDialogBox() {
+        alertDialog.show();
+    }
+
+    public static void cancelSignUpDialogBox() {
+        alertDialog.cancel();
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+        SignUpActivity.this.registerReceiver(new NetworkConnectionCheck(), intentFilter);
 
     }
 

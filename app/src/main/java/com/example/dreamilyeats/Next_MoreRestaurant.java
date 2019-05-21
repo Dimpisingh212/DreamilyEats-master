@@ -3,8 +3,10 @@ package com.example.dreamilyeats;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
@@ -12,6 +14,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.CursorAdapter;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -29,9 +32,12 @@ import android.widget.TextView;
 import com.example.dreamilyeats.Model.ChildModel;
 import com.example.dreamilyeats.Model.MyItemArray;
 import com.example.dreamilyeats.Model.ParentModel;
+import com.example.dreamilyeats.NetworkConnectivity.NetworkConnectionCheck;
 import com.google.android.gms.maps.GoogleMap;
 
 import java.util.ArrayList;
+
+import static com.example.dreamilyeats.NetworkConnectivity.NetworkConnectionCheck.isOnline;
 
 public class Next_MoreRestaurant extends AppCompatActivity {
 
@@ -49,6 +55,11 @@ public class Next_MoreRestaurant extends AppCompatActivity {
     private TextView restaurantnames;
     ArrayList<ParentModel> arrayList;
     private ImageView back;
+
+    public  AlertDialog.Builder builder;
+    public static AlertDialog alertDialog;
+    private NetworkConnectionCheck receiver = new NetworkConnectionCheck();
+
 
     ArrayList<ChildModel> arrayList1 ;
     ArrayList<ChildModel> arrayList2 ;
@@ -87,6 +98,18 @@ public class Next_MoreRestaurant extends AppCompatActivity {
         tab_layout.addTab(tab_layout.newTab().setText("Biscuits"));
         tab_layout.addTab(tab_layout.newTab().setText("Burgers"));
         tab_layout.setTabGravity(TabLayout.GRAVITY_FILL);
+
+
+        builder = new AlertDialog.Builder(this);
+        builder.setIcon(android.R.drawable.ic_dialog_alert);
+        builder.setTitle("Alert");
+        builder.setMessage("Network Connection off!!").setCancelable(false);
+        alertDialog = builder.create();
+
+        if (!isOnline(this)){
+
+            alertDialog.show();
+        }
 
 
         back.setOnClickListener(new View.OnClickListener() {
@@ -296,6 +319,11 @@ public class Next_MoreRestaurant extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
+
+        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        receiver =  new NetworkConnectionCheck();
+        Next_MoreRestaurant.this.registerReceiver(receiver, intentFilter);
+
         total_cost = 0.00;
         total_item = 0;
 
@@ -389,6 +417,16 @@ public class Next_MoreRestaurant extends AppCompatActivity {
         searchView.setOnQueryTextListener(queryTextListener);
         return super.onOptionsItemSelected(item);
     }
+
+
+    public static void showNext_restDialogBox() {
+        alertDialog.show();
+    }
+
+    public static void cancelNext_restDialogBox() {
+        alertDialog.cancel();
+    }
+
 
 
 

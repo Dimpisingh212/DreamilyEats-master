@@ -1,16 +1,25 @@
 package com.example.dreamilyeats;
 
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.example.dreamilyeats.NetworkConnectivity.NetworkConnectionCheck;
+
+import static com.example.dreamilyeats.NetworkConnectivity.NetworkConnectionCheck.isOnline;
+
 public class Help_Setting extends AppCompatActivity {
 
     ImageView  back;
     LinearLayout layout1,layout2,past_order_layout;
+
+    public  AlertDialog.Builder builder;
+    public static AlertDialog alertDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,5 +60,35 @@ public class Help_Setting extends AppCompatActivity {
             }
         });
 
+
+        builder = new AlertDialog.Builder(this);
+        builder.setIcon(android.R.drawable.ic_dialog_alert);
+        builder.setTitle("Alert");
+        builder.setMessage("Network Connection off!!").setCancelable(false);
+        alertDialog = builder.create();
+
+        if (!isOnline(this)){
+
+            alertDialog.show();
+        }
+
     }
+
+    public static void showHelpDialogBox() {
+        alertDialog.show();
+    }
+
+    public static void cancelHelpDialogBox() {
+        alertDialog.cancel();
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+        Help_Setting.this.registerReceiver(new NetworkConnectionCheck(), intentFilter);
+
+    }
+
 }

@@ -2,8 +2,10 @@ package com.example.dreamilyeats;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -13,10 +15,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.dreamilyeats.NetworkConnectivity.NetworkConnectionCheck;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import static com.example.dreamilyeats.NetworkConnectivity.NetworkConnectionCheck.isOnline;
 
 public class ForgetAndChangePasswordActivity extends AppCompatActivity {
 
@@ -27,6 +32,9 @@ public class ForgetAndChangePasswordActivity extends AppCompatActivity {
     TextInputLayout label;
     TextView change_pass;
     private String emailId;
+
+    public  AlertDialog.Builder builder;
+    public static AlertDialog alertDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,24 +55,7 @@ public class ForgetAndChangePasswordActivity extends AppCompatActivity {
             PD.setCanceledOnTouchOutside(false);
 
 
-/*
-            final int mode = getIntent().getIntExtra("Mode", 0);
-            if (mode == 0) {
-                change_pass.setText("Forget Password");
-                email_id.setHint("Enter Registered Email");
-                label.setHint("Enter Registered Email");
-            } else if (mode == 1) {
-                change_pass.setText("Change Password");
-                email_id.setHint("Enter New Password");
-                label.setHint("Enter New Password");
-            } else if (mode == 2) {
-                change_pass.setText("Change Email");
-                email_id.setHint("Enter New Email");
-                label.setHint("Enter New Email");
-            } else {
-                change_pass.setText("Delete User");
-                email_id.setVisibility(View.GONE);
-            }*/
+
 
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -84,83 +75,37 @@ public class ForgetAndChangePasswordActivity extends AppCompatActivity {
                 }
             });
 
+
+        builder = new AlertDialog.Builder(this);
+        builder.setIcon(android.R.drawable.ic_dialog_alert);
+        builder.setTitle("Alert");
+        builder.setMessage("Network Connection off!!").setCancelable(false);
+        alertDialog = builder.create();
+
+        if (!isOnline(this)){
+
+            alertDialog.show();
         }
 
-        private void callFunction(int mode) {
+}
 
-            FirebaseUser user = auth.getCurrentUser();
-            final String modeStr = email_id.getText().toString();
-            if (mode == 0) {
-                if (TextUtils.isEmpty(modeStr)) {
-                    email_id.setError("Value Required");
-                } else {
-                    PD.show();
-                    auth.sendPasswordResetEmail(modeStr).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                Toast.makeText(ForgetAndChangePasswordActivity.this, "We have sent you instructions to reset your password!", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(ForgetAndChangePasswordActivity.this, "Failed to send reset email!", Toast.LENGTH_SHORT).show();
-                            }
-                            PD.dismiss();
 
-                        }
-                    });
-                }
-            } else if (mode == 1) {
-                if (TextUtils.isEmpty(modeStr)) {
-                    email_id.setError("Value Required");
-                } else {
-                    PD.show();
-                    user.updatePassword(modeStr)
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        Toast.makeText(ForgetAndChangePasswordActivity.this, "Password is updated!", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        Toast.makeText(ForgetAndChangePasswordActivity.this, "Failed to update password!", Toast.LENGTH_SHORT).show();
-                                    }
-                                    PD.dismiss();
-                                }
 
-                            });
-                }
-            } else if (mode == 2) {
-                if (TextUtils.isEmpty(modeStr)) {
-                    email_id.setError("Value Required");
-                } else {
-                    PD.show();
-                    user.updateEmail(modeStr)
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override                            public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        Toast.makeText(ForgetAndChangePasswordActivity.this, "Email address is updated.", Toast.LENGTH_LONG).show();
-                                    } else {
-                                        Toast.makeText(ForgetAndChangePasswordActivity.this, "Failed to update email!", Toast.LENGTH_LONG).show();
-                                    }
-                                    PD.dismiss();
-                                }
-                            });
-                }
-            } else {
-                if (user != null) {
-                    PD.show();
-                    user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        Toast.makeText(ForgetAndChangePasswordActivity.this, "Your profile is deleted:( Create a account now!", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        Toast.makeText(ForgetAndChangePasswordActivity.this, "Failed to delete your account!", Toast.LENGTH_SHORT).show();
-                                    }
-                                    PD.dismiss();
-                                }
-                            });
-                }
-            }
+    public static void showForgotPassDialogBox() {
+        alertDialog.show();
+    }
 
+    public static void cancelForgotPassDialogBox() {
+        alertDialog.cancel();
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+        ForgetAndChangePasswordActivity.this.registerReceiver(new NetworkConnectionCheck(), intentFilter);
 
     }
+
 }

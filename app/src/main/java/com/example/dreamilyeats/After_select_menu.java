@@ -1,6 +1,7 @@
 package com.example.dreamilyeats;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.constraint.ConstraintLayout;
@@ -20,8 +21,11 @@ import android.widget.Toast;
 
 import com.example.dreamilyeats.Model.FavouriteListArray;
 import com.example.dreamilyeats.Model.MyItemArray;
+import com.example.dreamilyeats.NetworkConnectivity.NetworkConnectionCheck;
 
 import java.util.List;
+
+import static com.example.dreamilyeats.NetworkConnectivity.NetworkConnectionCheck.isOnline;
 
 public class After_select_menu extends AppCompatActivity {
 
@@ -31,6 +35,10 @@ public class After_select_menu extends AppCompatActivity {
     private double total_price = 0.00;
     private String TAG = "After_Select_menu";
     private LinearLayout special_instruction;
+
+    public  AlertDialog.Builder builder;
+    public static AlertDialog alertDialog;
+
 
 
 
@@ -51,6 +59,18 @@ public class After_select_menu extends AppCompatActivity {
         totalPrice = findViewById(R.id.totalPrice);
         bottom_bar = findViewById(R.id.bottom_bar);
         error = findViewById(R.id.error);
+
+       /* //Dialog box for network connection :
+        builder = new AlertDialog.Builder(this);
+        builder.setIcon(android.R.drawable.ic_dialog_alert);
+        builder.setTitle("Alert");
+        builder.setMessage("Network Connection off!!").setCancelable(false);
+        alertDialog = builder.create();
+
+        if (!isOnline(this)){
+
+            alertDialog.show();
+        }*/
 
         final String dishname = getIntent().getExtras().getString("dish_name");
         String dish_price = getIntent().getExtras().getString("price");
@@ -126,38 +146,50 @@ public class After_select_menu extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 int i = Integer.parseInt(add1.getText().toString());
-                if(i == 0) {
-                    error.setText("Please add item");
-                    error.setError("Please add item!!");
-                    error.setTextColor(Color.RED);
-                    Toast.makeText(After_select_menu.this, "Please add the item", Toast.LENGTH_LONG).show();
-                } else
-                    {
-                         final GlobalArray globalArray = (GlobalArray) getApplicationContext();
-                         if (containsName(globalArray.myItemArrays,dish_name.getText().toString())){
-                                Toast.makeText(globalArray, "Item already added", Toast.LENGTH_SHORT).show();
-                         }else {
-                             globalArray.myItemArrays.add(new MyItemArray(Double.parseDouble(totalPrice.getText().toString()), Integer.parseInt(add1.getText().toString())
-                                     ,dish_name.getText().toString()));
-                         }
+                if(isOnline(After_select_menu.this)) {
+                    if (i == 0) {
+                        error.setText("Please add item");
+                        error.setError("Please add item!!");
+                        error.setTextColor(Color.RED);
+                        Toast.makeText(After_select_menu.this, "Please add the item", Toast.LENGTH_LONG).show();
+                    } else {
+                        final GlobalArray globalArray = (GlobalArray) getApplicationContext();
+                        if (containsName(globalArray.myItemArrays, dish_name.getText().toString())) {
+                            Toast.makeText(globalArray, "Item already added", Toast.LENGTH_SHORT).show();
+                        } else {
+                            globalArray.myItemArrays.add(new MyItemArray(Double.parseDouble(totalPrice.getText().toString()), Integer.parseInt(add1.getText().toString())
+                                    , dish_name.getText().toString()));
+                        }
 
 
-                    Log.e(TAG ," price  :" +totalPrice.getText().toString());
-                    Log.e(TAG , "number  : " +add1.getText().toString());
+                        Log.e(TAG, " price  :" + totalPrice.getText().toString());
+                        Log.e(TAG, "number  : " + add1.getText().toString());
 
 
-                    Log.e(TAG ," Number of Items  :" +add1.getText().toString());
-                    Log.e(TAG ," Price of dish :" +totalPrice.getText().toString());
-                    Log.e(TAG ," name of dish :" +dish_name.getText().toString());
+                        Log.e(TAG, " Number of Items  :" + add1.getText().toString());
+                        Log.e(TAG, " Price of dish :" + totalPrice.getText().toString());
+                        Log.e(TAG, " name of dish :" + dish_name.getText().toString());
 
-                    Log.e(TAG , "Global Array :" + globalArray.myItemArrays);
-
-
-                    finish();
+                        Log.e(TAG, "Global Array :" + globalArray.myItemArrays);
 
 
+                        finish();
 
+
+                    }
+                } else {
+                    builder = new AlertDialog.Builder(After_select_menu.this);
+                    builder.setIcon(android.R.drawable.ic_dialog_alert);
+                    builder.setTitle("Alert");
+                    builder.setMessage("Network Connection off!!");
+                    alertDialog = builder.create();
+
+                    if (!isOnline(After_select_menu.this)){
+
+                        alertDialog.show();
+                    }
                 }
+
             }
         });
 
@@ -175,4 +207,12 @@ public class After_select_menu extends AppCompatActivity {
         return false;
     }
 
+    /*@Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+        After_select_menu.this.registerReceiver(new NetworkConnectionCheck(), intentFilter);
+
+    }
+*/
 }

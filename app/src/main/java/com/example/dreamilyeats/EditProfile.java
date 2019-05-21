@@ -3,6 +3,7 @@ package com.example.dreamilyeats;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -30,6 +31,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.example.dreamilyeats.NetworkConnectivity.NetworkConnectionCheck;
 import com.facebook.Profile;
 import com.facebook.internal.ImageRequest;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -48,6 +50,8 @@ import java.io.IOException;
 import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.http.Url;
 
+import static com.example.dreamilyeats.NetworkConnectivity.NetworkConnectionCheck.isOnline;
+
 public class EditProfile extends AppCompatActivity {
 
     private static final String TAG = "EditProfile=> ";
@@ -58,6 +62,11 @@ public class EditProfile extends AppCompatActivity {
     private FirebaseStorage storage;
     private Bitmap my_image;
 
+    public  AlertDialog.Builder builder;
+    public static AlertDialog alertDialog;
+
+    private  NetworkConnectionCheck receiver = new NetworkConnectionCheck();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,7 +76,16 @@ public class EditProfile extends AppCompatActivity {
         final FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         storage = FirebaseStorage.getInstance();
 
+        /*builder = new AlertDialog.Builder(this);
+        builder.setIcon(android.R.drawable.ic_dialog_alert);
+        builder.setTitle("Alert");
+        builder.setMessage("Network Connection off!!").setCancelable(false);
+        alertDialog = builder.create();
 
+        if (!isOnline(this)){
+
+            alertDialog.show();
+        }*/
 
 
 
@@ -154,8 +172,21 @@ public class EditProfile extends AppCompatActivity {
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(EditProfile.this, Edit_Profile_setting.class);
-                startActivity(intent);
+                if(isOnline(EditProfile.this)) {
+                    Intent intent = new Intent(EditProfile.this, Edit_Profile_setting.class);
+                    startActivity(intent);
+                } else {
+                    builder = new AlertDialog.Builder(EditProfile.this);
+                    builder.setIcon(android.R.drawable.ic_dialog_alert);
+                    builder.setTitle("Alert");
+                    builder.setMessage("Network Connection off!!");
+                    alertDialog = builder.create();
+
+                    if (!isOnline(EditProfile.this)){
+
+                        alertDialog.show();
+                    }
+                }
             }
         });
 
@@ -212,6 +243,34 @@ public class EditProfile extends AppCompatActivity {
         return  BitmapFactory.decodeByteArray(decodeByte, 0, decodeByte.length);
     }
 
+
+
+    public static void showEditProfileDialogBox() {
+        alertDialog.show();
+    }
+
+    public static void cancelEditProfileDialogBox() {
+        alertDialog.cancel();
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+        receiver =new NetworkConnectionCheck();
+        EditProfile.this.registerReceiver(receiver, intentFilter);
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        // Unregisters BroadcastReceiver when app is destroyed.
+        if (receiver != null) {
+            this.unregisterReceiver(receiver);
+        }
+    }
 
 
 }

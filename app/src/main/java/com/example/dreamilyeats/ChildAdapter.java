@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,14 +17,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.dreamilyeats.Model.ChildModel;
+import com.example.dreamilyeats.NetworkConnectivity.NetworkConnectionCheck;
 
 import java.util.ArrayList;
+
+import static com.example.dreamilyeats.NetworkConnectivity.NetworkConnectionCheck.isOnline;
 
 public class ChildAdapter extends RecyclerView.Adapter<ChildAdapter.Viewholder> {
 
     Context context;
     ArrayList<ChildModel> arrayList1;
     ArrayList<ChildModel> filterlist;
+    public  AlertDialog.Builder builder;
+    public static AlertDialog alertDialog;
 
     public ChildAdapter(Context context, ArrayList<ChildModel> arrayList1) {
         this.context=context;
@@ -50,17 +56,30 @@ public class ChildAdapter extends RecyclerView.Adapter<ChildAdapter.Viewholder> 
         viewholder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context , After_select_menu.class);
-                intent.putExtra("dish_name", arrayList1.get(i).getDish_name());
-                intent.putExtra("price", arrayList1.get(i).getPrice());
-                context.startActivity(intent);
+                if(NetworkConnectionCheck.isOnline(context)) {
+                    Intent intent = new Intent(context, After_select_menu.class);
+                    intent.putExtra("dish_name", arrayList1.get(i).getDish_name());
+                    intent.putExtra("price", arrayList1.get(i).getPrice());
+                    context.startActivity(intent);
 
 
-                Log.e("child array :" , " " +arrayList1.get(i).getDish_name());
-                Log.e("child array :" , " " +arrayList1.get(i).getAbout());
-                Log.e("child array :" , " " +arrayList1.get(i).getPrice());
+                    Log.e("child array :", " " + arrayList1.get(i).getDish_name());
+                    Log.e("child array :", " " + arrayList1.get(i).getAbout());
+                    Log.e("child array :", " " + arrayList1.get(i).getPrice());
 
+                } else {
+                    builder = new AlertDialog.Builder(context);
+                    builder.setIcon(android.R.drawable.ic_dialog_alert);
+                    builder.setTitle("Alert");
+                    builder.setMessage("Network Connection off!!");
+                    alertDialog = builder.create();
 
+                    if (!isOnline(context)){
+
+                        alertDialog.show();
+                    }
+
+                }
 
 
             }

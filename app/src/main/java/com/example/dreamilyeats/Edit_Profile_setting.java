@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -31,6 +32,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.dreamilyeats.NetworkConnectivity.NetworkConnectionCheck;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -58,6 +60,8 @@ import java.util.concurrent.atomic.AtomicMarkableReference;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.example.dreamilyeats.NetworkConnectivity.NetworkConnectionCheck.isOnline;
+
 public class Edit_Profile_setting extends AppCompatActivity {
 
     EditText user_name;
@@ -70,6 +74,9 @@ public class Edit_Profile_setting extends AppCompatActivity {
     private FirebaseStorage storage;
     private Bitmap my_image;
     private  FirebaseUser firebaseUser;
+
+    public  AlertDialog.Builder builder;
+    public static AlertDialog alertDialog;
 
 
 
@@ -88,10 +95,19 @@ public class Edit_Profile_setting extends AppCompatActivity {
         add = findViewById(R.id.add);
         profile_dp = findViewById(R.id.profile_dp);
         done = findViewById(R.id.done);
-      //  user_name.setText(firebaseUser.getDisplayName());
 
 
+        //For check Network Connection :
+        builder = new AlertDialog.Builder(this);
+        builder.setIcon(android.R.drawable.ic_dialog_alert);
+        builder.setTitle("Alert");
+        builder.setMessage("Network Connection off!!").setCancelable(false);
+        alertDialog = builder.create();
 
+        if (!isOnline(this)){
+
+            alertDialog.show();
+        }
 
 
 
@@ -105,9 +121,22 @@ public class Edit_Profile_setting extends AppCompatActivity {
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(isOnline(Edit_Profile_setting.this)) {
+                    upload();
+                    onBackPressed();
+                }else {
+                    builder = new AlertDialog.Builder(Edit_Profile_setting.this);
+                    builder.setIcon(android.R.drawable.ic_dialog_alert);
+                    builder.setTitle("Alert");
+                    builder.setMessage("Network Connection off!!");
+                    alertDialog = builder.create();
 
-                upload();
-                onBackPressed();
+                    if (!isOnline(Edit_Profile_setting.this)){
+
+                        alertDialog.show();
+                    }
+
+                }
             }
         });
 
@@ -125,10 +154,6 @@ public class Edit_Profile_setting extends AppCompatActivity {
             Glide.with(getApplicationContext()).load(firebaseUser.getPhotoUrl()).into(profile_dp);
 
         }
-
-
-
-
 
 
         add.setOnClickListener(new View.OnClickListener() {
@@ -369,5 +394,24 @@ public class Edit_Profile_setting extends AppCompatActivity {
         }
 
     }
+
+
+    public static void showEdit_ProfileDialogBox() {
+        alertDialog.show();
+    }
+
+    public static void cancelEdit_ProfileDialogBox() {
+        alertDialog.cancel();
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+        Edit_Profile_setting.this.registerReceiver(new NetworkConnectionCheck(), intentFilter);
+
+    }
+
 
 }
