@@ -1,5 +1,6 @@
 package com.example.dreamilyeats;
 
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.support.v7.app.AlertDialog;
@@ -7,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.dreamilyeats.NetworkConnectivity.NetworkConnectionCheck;
 
@@ -20,12 +22,15 @@ public class Promotion_Setting extends AppCompatActivity {
     public static AlertDialog alertDialog;
     private NetworkConnectionCheck receiver = new NetworkConnectionCheck();
 
+    TextView share;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_promotion__setting);
 
         back = findViewById(R.id.back);
+        share = findViewById(R.id.share);
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,6 +54,19 @@ public class Promotion_Setting extends AppCompatActivity {
         IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         receiver = new NetworkConnectionCheck();
         Promotion_Setting.this.registerReceiver(receiver, intentFilter);
+
+
+        share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT,
+                        "Hey check out my app at: https://play.google.com/store/apps/details?id=com.google.android.apps.plus");
+                sendIntent.setType("text/plain");
+                startActivity(sendIntent);
+            }
+        });
 
     }
 
