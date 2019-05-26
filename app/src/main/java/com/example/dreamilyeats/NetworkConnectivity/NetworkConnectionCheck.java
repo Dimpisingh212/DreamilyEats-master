@@ -36,6 +36,8 @@ import static com.example.dreamilyeats.SignUpActivity.cancelSignUpDialogBox;
 import static com.example.dreamilyeats.SignUpActivity.showSignUPDialogBox;
 import static com.example.dreamilyeats.Your_Favourites.cancelFavouriteDialogBox;
 import static com.example.dreamilyeats.Your_Favourites.showFavouriteDialogBox;
+import static com.example.dreamilyeats.Your_Cart.cancelYourCartDialogBox;
+import static com.example.dreamilyeats.Your_Cart.showYourCartDialogBox;
 
 
 public class NetworkConnectionCheck extends BroadcastReceiver {
@@ -62,6 +64,7 @@ public class NetworkConnectionCheck extends BroadcastReceiver {
                 cancelSettingDialogBox();
                 cancelSignUpDialogBox();
                 cancelFavouriteDialogBox();
+                cancelYourCartDialogBox();
 
 
             } else {
@@ -79,6 +82,7 @@ public class NetworkConnectionCheck extends BroadcastReceiver {
                 showSettingDialogBox();
                 showSignUPDialogBox();
                 showFavouriteDialogBox();
+                showYourCartDialogBox();
 
             }
 

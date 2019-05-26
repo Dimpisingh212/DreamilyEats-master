@@ -572,18 +572,22 @@ public class Next_MoreRestaurant extends AppCompatActivity {
         arrayList8 = new ArrayList<>();
 
 
-        arrayList1.add(new ChildModel("Executive Thali","Dal makhani with seasonal veg. rice, laccha paratha,papad,pickle","175.00","vegetarian", R.drawable.vege));
-        arrayList1.add(new ChildModel("Special Thali","Dal Makhani + Paneer Vegetable + Seasonal Vegetables+Rice _ 1 Naan.","200.00","vegetarian", R.drawable.vege));
+        arrayList1.add(new ChildModel("2 Tandoori Aloo Paratha","Dal makhani with seasonal veg. rice, laccha paratha,papad,pickle","150.00","vegetarian", R.drawable.vege));
+        arrayList1.add(new ChildModel("2 X Red Bull","Dal Makhani + Paneer Vegetable + Seasonal Vegetables+Rice _ 1 Naan.","200.00","vegetarian", R.drawable.vege));
 
         //South Indians
-        arrayList2.add(new ChildModel("Agarwal Special dosa"," ","120.00","vegetarian", R.drawable.vege));
-        arrayList2.add(new ChildModel("Plain Dosa","Masala patty","138.00","vegetarian", R.drawable.vege));
+        arrayList2.add(new ChildModel("Masala Dosa"," ","120.00","vegetarian", R.drawable.vege));
+        arrayList2.add(new ChildModel("Kadhai Paneer","Batons of Cottage cheese with capsicum and onion.","120.00","vegetarian", R.drawable.vege));
+        arrayList2.add(new ChildModel("Tomato Soup"," ","65.00","vegetarian", R.drawable.vege));
+        arrayList2.add(new ChildModel("Rava Masala Dosa","Masala patty","138.00","vegetarian", R.drawable.vege));
 
 
         //Sweets
         arrayList3.add(new ChildModel("Kaju katli","500 grams packet.","190.00","vegetarian", R.drawable.vege));
-        arrayList3.add(new ChildModel("Pista Lounge","Per Kg.","209.00","vegetarian", R.drawable.vege));
-        arrayList3.add(new ChildModel("Besan Laddu","500 grams packet.","181.00","vegetarian", R.drawable.vege));
+        arrayList3.add(new ChildModel("Malai Chamcham","Per Kg.","450.00","vegetarian", R.drawable.vege));
+        arrayList3.add(new ChildModel("Rasgulla","500 grams packet.","200.00","vegetarian", R.drawable.vege));
+        arrayList3.add(new ChildModel("Gulab Jamun","500 grams packet.","300.00","vegetarian", R.drawable.vege));
+        arrayList3.add(new ChildModel("Malpua","500 grams packet.","600.00","vegetarian", R.drawable.vege));
 
         //Namkeens & Snacks
         arrayList4.add(new ChildModel("Mix namkeen","400 grams packets.","60.14","vegetarian", R.drawable.vege));
@@ -594,10 +598,15 @@ public class Next_MoreRestaurant extends AppCompatActivity {
 
         //Chinese
         arrayList5.add(new ChildModel("Vpaneer sataty"," ","100.00","vegetarian", R.drawable.vege));
+        arrayList5.add(new ChildModel("Veg Chowmein","Plate.","200.00","vegetarian", R.drawable.vege));
+        arrayList5.add(new ChildModel("Chinese Plater","Plate.","190.00","vegetarian", R.drawable.vege));
+        arrayList5.add(new ChildModel("Veg Fried Rice","Plate.","190.00","vegetarian", R.drawable.vege));
         arrayList5.add(new ChildModel("Chilli paneer","Plate.","190.00","vegetarian", R.drawable.vege));
 
         //Cakes & Pastries
         arrayList6.add(new ChildModel("chocolate pudding","Black Forest","584.00"," ", 0));
+        arrayList6.add(new ChildModel("Brownie"," ","25.00"," ", 0));
+        arrayList6.add(new ChildModel("Brownie"," ","25.00"," ", 0));
         arrayList6.add(new ChildModel("Brownie"," ","25.00"," ", 0));
 
 
@@ -626,13 +635,19 @@ public class Next_MoreRestaurant extends AppCompatActivity {
         arrayList8 = new ArrayList<>();
 
 
-        arrayList1.add(new ChildModel("Executive Thali","Dal makhani with seasonal veg. rice, laccha paratha,papad,pickle","175.00","vegetarian", R.drawable.vege));
-        arrayList1.add(new ChildModel("Special Thali","Dal Makhani + Paneer Vegetable + Seasonal Vegetables+Rice _ 1 Naan.","200.00","vegetarian", R.drawable.vege));
+        arrayList1.add(new ChildModel("paneer Kulcha","Dal makhani with seasonal veg. rice,papad,pickle","175.00","vegetarian", R.drawable.vege));
+        arrayList1.add(new ChildModel("Plain Dhokla","Dal Makhani + Paneer Vegetable + Seasonal Vegetables+Rice _ 1 Naan.","300.00","vegetarian", R.drawable.vege));
+        arrayList1.add(new ChildModel("2 Tandoori Aloo Paratha","Dal makhani with seasonal veg. rice, laccha paratha,papad,pickle","150.00","vegetarian", R.drawable.vege));
+        arrayList1.add(new ChildModel("2 X Red Bull","Dal Makhani + Paneer Vegetable + Seasonal Vegetables+Rice _ 1 Naan.","200.00","vegetarian", R.drawable.vege));
+
 
         //South Indians
         arrayList2.add(new ChildModel("Paneer Uttapam"," ","120.00","vegetarian", R.drawable.vege));
         arrayList2.add(new ChildModel("Hakka Masala Dosa","Masala patty","138.00","vegetarian", R.drawable.vege));
         arrayList2.add(new ChildModel("Onion Uttapam","onion uttapam","110.00","vegetarian", R.drawable.vege));
+        arrayList2.add(new ChildModel("Tomato Soup"," ","65.00","vegetarian", R.drawable.vege));
+        arrayList2.add(new ChildModel("Rava Masala Dosa","Masala patty","138.00","vegetarian", R.drawable.vege));
+
 
         //Sweets
         arrayList3.add(new ChildModel("Gajak","500 grams packet.","190.48","vegetarian", R.drawable.vege));
@@ -643,26 +658,36 @@ public class Next_MoreRestaurant extends AppCompatActivity {
         arrayList4.add(new ChildModel("Moong mogar - 400 grams packts","400 grams packets.","60.14","vegetarian", R.drawable.vege));
         arrayList4.add(new ChildModel("Aloo Chips Black Masala","200 grams.","44.92","vegetarian", R.drawable.vege));
         arrayList4.add(new ChildModel("mix namkeen","200 grams","44.00","vegetarian", R.drawable.vege));
+        arrayList4.add(new ChildModel("Snacks","500 grams","60.00","vegetarian", R.drawable.vege));
+        arrayList4.add(new ChildModel("Badam Fry Salted","500 grams","227.00","vegetarian", R.drawable.vege));
 
         //Chinese
         arrayList5.add(new ChildModel("Veg manchourine","chowmein","110.00","vegetarian", R.drawable.vege));
         arrayList5.add(new ChildModel("Veg hakka noodels"," ","100.00","vegetarian", R.drawable.vege));
+        arrayList5.add(new ChildModel("Chinese Plater","Plate.","190.00","vegetarian", R.drawable.vege));
+        arrayList5.add(new ChildModel("Veg Fried Rice","Plate.","190.00","vegetarian", R.drawable.vege));
 
 
         //Cakes & Pastries
-        arrayList6.add(new ChildModel("Black Forest Cake","Black Forest","584.75"," ", 0));
-        arrayList6.add(new ChildModel("Brownie"," ","25.42"," ", 0));
-        arrayList6.add(new ChildModel("ButterScotch Pastry","Per Piece.","140.68"," ", 0));
+        arrayList6.add(new ChildModel("Black Forest Cake","Black Forest","584.00"," ", 0));
+        arrayList6.add(new ChildModel("Brownie"," ","25.00"," ", 0));
+        arrayList6.add(new ChildModel("ButterScotch Pastry","Per Piece.","140.00"," ", 0));
         arrayList6.add(new ChildModel("Cake Butter Scotch","450 gms","305.00"," ", 0));
-        arrayList6.add(new ChildModel("Choco Cupcake","Per piece.","44.07"," ", 0));
+        arrayList6.add(new ChildModel("Choco Cupcake","Per piece.","44.00"," ", 0));
 
         //Biscuits
-        arrayList7.add(new ChildModel("Ajwain Phool","300 grams packets","67.42","vegetarian",  R.drawable.vege));
-        arrayList7.add(new ChildModel("Almond Butter Cookies","450 grams Box","288.42","vegetarian",  R.drawable.vege));
+        arrayList7.add(new ChildModel("Ajwain Phool","300 grams packets","67.00","vegetarian",  R.drawable.vege));
+        arrayList7.add(new ChildModel("Almond Butter Cookies","450 grams Box","288.00","vegetarian",  R.drawable.vege));
+        arrayList7.add(new ChildModel("Butter cake Rusk","450 grams Box","200.00","vegetarian",  R.drawable.vege));
+        arrayList7.add(new ChildModel("Cherry Biscuits","450 grams Box","300.00","vegetarian",  R.drawable.vege));
+        arrayList7.add(new ChildModel("Coconut Badam Biscuits","450 grams Box","350.00","vegetarian",  R.drawable.vege));
 
         //Burgers
         arrayList8.add(new ChildModel("Crispy Masala Burger","Desi masala patty","65.00","vegetarian", R.drawable.vege));
         arrayList8.add(new ChildModel("Devils Delight Burger Meal","100% chicken patty","200.00"," ", 0));
+        arrayList8.add(new ChildModel("Cheese Burger","100% cheese patty","200.00"," ", 0));
+        arrayList8.add(new ChildModel("Spicy Paneer momos","100% spicy","200.00"," ", 0));
+        arrayList8.add(new ChildModel("Veg Burger","100% veg patty","200.00"," ", 0));
 
 
     }

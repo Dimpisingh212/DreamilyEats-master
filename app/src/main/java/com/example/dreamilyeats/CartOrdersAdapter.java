@@ -24,13 +24,12 @@ import java.util.ArrayList;
 import static android.content.Context.MODE_PRIVATE;
 import static com.facebook.FacebookSdk.getApplicationContext;
 
-@RequiresApi(api = Build.VERSION_CODES.N)
+
 public class CartOrdersAdapter extends RecyclerView.Adapter<CartOrdersAdapter.Viewholder> {
 
     Your_Cart context;
     ArrayList<MyItemArray> myarray;
     final GlobalArray globalArray = (GlobalArray) getApplicationContext();
-    DecimalFormat form = new DecimalFormat("#.##");
 
     public CartOrdersAdapter(Your_Cart context, ArrayList<MyItemArray> myarray) {
         this.context = context;
@@ -58,6 +57,7 @@ public class CartOrdersAdapter extends RecyclerView.Adapter<CartOrdersAdapter.Vi
                 AlertDialog alertDialog = new AlertDialog.Builder(context).create();
                 alertDialog.setMessage("Remove item from cart");
                 alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "remove", new DialogInterface.OnClickListener() {
+                            @RequiresApi(api = Build.VERSION_CODES.N)
                             public void onClick(DialogInterface dialog, int which) {
                                 removeAt(i);
                                 double removable_price = Double.parseDouble(viewholder.dishes_price.getText().toString());

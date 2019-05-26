@@ -39,7 +39,7 @@ import java.util.List;
 
 import static com.example.dreamilyeats.NetworkConnectivity.NetworkConnectionCheck.isOnline;
 
-@RequiresApi(api = Build.VERSION_CODES.N)
+
 public class Your_Cart extends AppCompatActivity {
 
     TextView restaurant_name,estimate_time,current_location,num_dishes,dishes_price,dishes_list,total_price,total_price1,other_location;
@@ -62,6 +62,7 @@ public class Your_Cart extends AppCompatActivity {
 
 
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,6 +86,18 @@ public class Your_Cart extends AppCompatActivity {
         restaurant_name.setText(GlobalArray.hotel_name);
         estimate_time.setText(GlobalArray.time);
         total_price1.setText(String.valueOf(delivery_charge));
+
+
+        builder = new AlertDialog.Builder(this);
+        builder.setIcon(android.R.drawable.ic_dialog_alert);
+        builder.setTitle("Alert");
+        builder.setMessage("Network Connection off!!").setCancelable(false);
+        alertDialog = builder.create();
+
+        if (!isOnline(this)){
+
+            alertDialog.show();
+        }
 
 
 
@@ -119,6 +132,7 @@ public class Your_Cart extends AppCompatActivity {
         //use global array :
         final GlobalArray globalArray = (GlobalArray) getApplicationContext();
         myarray = globalArray.getMyItemArrays();
+        Log.e(TAG, "List Item Array :" +myarray.toString());
 
 
 
@@ -136,6 +150,9 @@ public class Your_Cart extends AppCompatActivity {
 
         double t = subtotal + delivery_charge;
         total_billing_charge.setText(String.valueOf(t));
+        SharedPreferences.Editor charge = getSharedPreferences("Total_charge", MODE_PRIVATE).edit();
+        charge.putString("total_charge", total_billing_charge.getText().toString());
+        charge.commit();
 
 
         Date c = Calendar.getInstance().getTime();
@@ -173,7 +190,7 @@ public class Your_Cart extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
                             }
-                        });//jjj
+                        });
                         alertDialog.show();
 
                     }
@@ -208,6 +225,7 @@ public class Your_Cart extends AppCompatActivity {
 
 
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void update_total(double item_cost) {
 
        total = Double.parseDouble(total_price.getText().toString()) - item_cost;
@@ -229,6 +247,14 @@ public class Your_Cart extends AppCompatActivity {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(dialogView);
+        TextView receipt = dialogView.findViewById(R.id.receipt);
+        receipt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Your_Cart.this, Recipt_Activity.class);
+                startActivity(intent);
+            }
+        });
         TextView home_page = dialogView.findViewById(R.id.home_page);
         home_page.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -244,6 +270,13 @@ public class Your_Cart extends AppCompatActivity {
 
     }
 
+    public static void showYourCartDialogBox() {
+        alertDialog.show();
+    }
+
+    public static void cancelYourCartDialogBox() {
+        alertDialog.cancel();
+    }
 
 
     @Override
